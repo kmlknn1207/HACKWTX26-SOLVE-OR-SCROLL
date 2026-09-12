@@ -34,7 +34,9 @@ declare global {
       modestbranding?: 0 | 1;
       rel?: 0 | 1;
       playsinline?: 0 | 1;
+      loop?: 0 | 1;
       origin?: string;
+      widget_referrer?: string;
     }
 
     interface PlayerOptions {
@@ -45,6 +47,7 @@ declare global {
       events?: {
         onReady?: (event: { target: Player }) => void;
         onStateChange?: (event: { data: PlayerState; target: Player }) => void;
+        onError?: (event: { data: number; target: Player }) => void;
       };
     }
 
@@ -52,6 +55,10 @@ declare global {
       constructor(element: string | HTMLElement, options: PlayerOptions);
       playVideo(): void;
       destroy(): void;
+      getCurrentTime(): number;
+      getDuration(): number;
+      getPlayerState(): PlayerState;
+      getIframe(): HTMLIFrameElement;
     }
   }
 }

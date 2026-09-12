@@ -24,7 +24,7 @@ export function VideoPlayerScreen({
         {Math.min(videoIndex + 1, total)} of {total}
       </p>
       {current ? (
-        <VideoPlayer youtubeId={current.youtubeId} onEnded={onEnded} />
+        <VideoPlayer key={current.id} youtubeId={current.youtubeId} onEnded={onEnded} />
       ) : (
         <p>Loading videos…</p>
       )}
