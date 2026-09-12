@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CV Test — Attention Detector v2</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0a0a0a;
+      color: #eee;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+    }
+    h1 { margin: 0 0 16px; font-size: 22px; }
+    video {
+      width: 100%;
+      max-width: 720px;
+      border: 2px solid #333;
+      border-radius: 12px;
+      transform: scaleX(-1);
+      background: #000;
+    }
+    .stats {
+      font-size: 18px;
+      margin-top: 20px;
+      font-family: ui-monospace, monospace;
+      line-height: 1.7;
+      background: #1a1a1a;
+      padding: 16px 20px;
+      border-radius: 8px;
+      min-width: 320px;
+    }
+    .status {
+      font-size: 44px;
+      font-weight: 900;
+      margin-top: 20px;
+      letter-spacing: 0.03em;
+    }
+    .attentive { color: #4ade80; }
+    .warning { color: #fbbf24; }
+    .distracted { color: #f87171; }
+    .loading { color: #60a5fa; }
+    .reason { font-size: 16px; color: #999; margin-top: 6px; font-family: ui-monospace, monospace; }
+  </style>
+</head>
+<body>
+  <h1>Attention Detector — Test v2</h1>
+  <video id="video" autoplay muted playsinline></video>
+  <div class="stats">
+    <div>Yaw:   <span id="yaw">--</span>°</div>
+    <div>Pitch: <span id="pitch">--</span>°</div>
+    <div>Eye L: <span id="eyeL">--</span> &nbsp; Eye R: <span id="eyeR">--</span></div>
+    <div>Not-attentive for: <span id="timer">0</span> ms</div>
+  </div>
+  <div class="status loading" id="status">Loading model…</div>
+  <div class="reason" id="reason"></div>
+
+  <script type="module">
+    import { FaceLandmarker, FilesetResolver } from
+      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.9/vision_bundle.mjs";
+
+    const video = document.getElementById("video");
+    const statusEl = document.getElementById("status");
+    const reasonEl = document.getElementById("reason");
+    const timerEl = document.getElementById("timer");
+
+    // Tunable thresholds
+    const YAW_LIMIT = 18;         // degrees
+    const PITCH_LIMIT = 14;       // degrees
+    const EYE_CLOSED = 0.4;       // blendshape score
+    const EYE_HOLD_MS = 400;      // eyes must stay closed this long
+    const SOFT_MS = 800;          // warning state
+    const HARD_MS = 2500;         // hard distracted state
+
+    let notAttentiveSince = null;
+    let eyesClosedSince = null;
+
+    try {
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.9/wasm"
+      );
+      const landmarker = await FaceLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+          delegate: "GPU",
+        },
+        outputFaceBlendshapes: true,
+        outputFacialTransformationMatrixes: true,
+        runningMode: "VIDEO",
+        numFaces: 1,
+      });
+
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      await new Promise(r => (video.onloadedmetadata = r));
+      statusEl.textContent = "ATTENTIVE";
+      statusEl.className = "status attentive";
+
+      function loop() {
+        const now = performance.now();
+        const result = landmarker.detectForVideo(video, now);
+
+        let reason = "";
+        let notAttentive = false;
+
+        if (result.facialTransformationMatrixes.length > 0) {
+          const m = result.facialTransformationMatrixes[0].data;
+          const yaw = (Math.atan2(m[8], m[10]) * 180) / Math.PI;
+          const pitch =
+            (Math.atan2(-m[9], Math.sqrt(m[8] * m[8] + m[10] * m[10])) * 180) /
+            Math.PI;
+
+          document.getElementById("yaw").textContent = yaw.toFixed(1);
+          document.getElementById("pitch").textContent = pitch.toFixed(1);
+
+          const bs = result.faceBlendshapes[0].categories;
+          const eyeL = bs.find(c => c.categoryName === "eyeBlinkLeft").score;
+          const eyeR = bs.find(c => c.categoryName === "eyeBlinkRight").score;
+          document.getElementById("eyeL").textContent = eyeL.toFixed(2);
+          document.getElementById("eyeR").textContent = eyeR.toFixed(2);
+
+          // Head check
+          if (Math.abs(yaw) > YAW_LIMIT) {
+            notAttentive = true;
+            reason = `Head turned (yaw ${yaw.toFixed(0)}°)`;
+          } else if (Math.abs(pitch) > PITCH_LIMIT) {
+            notAttentive = true;
+            reason = `Head tilted (pitch ${pitch.toFixed(0)}°)`;
+          }
+
+          // Eye check with hold time (rejects blinks)
+          const bothClosed = eyeL > EYE_CLOSED && eyeR > EYE_CLOSED;
+          if (bothClosed) {
+            if (eyesClosedSince === null) eyesClosedSince = now;
+            if (now - eyesClosedSince > EYE_HOLD_MS) {
+              notAttentive = true;
+              reason = `Eyes closed`;
+            }
+          } else {
+            eyesClosedSince = null;
+          }
+        } else {
+          notAttentive = true;
+          reason = "No face detected";
+        }
+
+        // Track how long we've been not-attentive
+        if (notAttentive) {
+          if (notAttentiveSince === null) notAttentiveSince = now;
+        } else {
+          notAttentiveSince = null;
+        }
+
+        const duration = notAttentiveSince ? now - notAttentiveSince : 0;
+        timerEl.textContent = Math.round(duration);
+
+        // Three-state output
+        if (!notAttentive) {
+          statusEl.textContent = "ATTENTIVE";
+          statusEl.className = "status attentive";
+          reasonEl.textContent = "";
+        } else if (duration < SOFT_MS) {
+          statusEl.textContent = "ATTENTIVE";
+          statusEl.className = "status attentive";
+          reasonEl.textContent = "";
+        } else if (duration < HARD_MS) {
+          statusEl.textContent = "WARNING";
+          statusEl.className = "status warning";
+          reasonEl.textContent = reason;
+        } else {
+          statusEl.textContent = "DISTRACTED";
+          statusEl.className = "status distracted";
+          reasonEl.textContent = reason;
+        }
+
+        requestAnimationFrame(loop);
+      }
+      loop();
+    } catch (err) {
+      statusEl.textContent = "Error: " + err.message;
+      statusEl.className = "status distracted";
+      console.error(err);
+    }
+  </script>
+</body>
+</html>
