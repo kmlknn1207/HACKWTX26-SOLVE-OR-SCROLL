@@ -1,23 +1,226 @@
 [
   {
     "id": "vid_01",
-    "youtubeId": "jNQXAC9IVRw",
-    "question": "Placeholder: what is this famous early YouTube video about?",
-    "options": ["A cooking tutorial", "Elephants at the zoo", "A cat compilation", "A product ad"],
-    "correct": "Elephants at the zoo"
+    "youtubeUrl": "https://youtube.com/shorts/PBBqsyh68qk?si=UH-Tn668ggY3hiRt",
+    "youtubeId": "PBBqsyh68qk",
+    "question": "What pattern is on John Cena's tie in the video?",
+    "options": ["Solid black", "Striped blue", "Black and white geometric", "Red polka dots"],
+    "correct": "Black and white geometric"
   },
   {
     "id": "vid_02",
-    "youtubeId": "M7lc1UVf-VE",
-    "question": "Placeholder: this clip is YouTube’s IFrame API demo. What is it demonstrating?",
-    "options": ["Live chat", "Embedding and controlling a YouTube player", "YouTube Shorts editing", "Ad targeting"],
-    "correct": "Embedding and controlling a YouTube player"
+    "youtubeUrl": "https://youtube.com/shorts/4SbcFTtePKo?si=wggRGABquChBuI-b",
+    "youtubeId": "4SbcFTtePKo",
+    "question": "Which superhero is ranked at number 2 in the video?",
+    "options": ["Frozone", "Black Panther", "Spiderman", "Flashman"],
+    "correct": "Frozone"
   },
   {
     "id": "vid_03",
-    "youtubeId": "aqz-KE-bpKQ",
-    "question": "Placeholder: replace this entry with a real Short. What should `correct` store?",
-    "options": ["The exact text of the right option", "A YouTube URL", "Elapsed seconds", "The player id"],
-    "correct": "The exact text of the right option"
+    "youtubeUrl": "https://youtube.com/shorts/Q2LXFP05Ex0?si=HE-o6gmGIyh6Kmdt",
+    "youtubeId": "Q2LXFP05Ex0",
+    "question": "Which number does Spider-Man say during the countdown?",
+    "options": ["Eight", "ELEVENTY-SEVEN", "Twelve", "Fifteen"],
+    "correct": "ELEVENTY-SEVEN"
+  },
+  {
+    "id": "vid_04",
+    "youtubeUrl": "https://youtube.com/shorts/Gmom_UPCJw4?si=5AvCpHYMUGm0JZdo",
+    "youtubeId": "Gmom_UPCJw4",
+    "question": "What color shirt is the speaker wearing in the video?",
+    "options": ["Red", "Dark blue", "White", "Green"],
+    "correct": "Dark blue"
+  },
+  {
+    "id": "vid_05",
+    "youtubeUrl": "https://youtube.com/shorts/iud0sNi23rE?si=wl3rVk34CjRGbJgz",
+    "youtubeId": "iud0sNi23rE",
+    "question": "How many landmines does the soldier step on before falling?",
+    "options": ["Two", "Three", "Five", "Seven"],
+    "correct": "Three"
+  },
+  {
+    "id": "vid_06",
+    "youtubeUrl": "https://youtube.com/shorts/t1E35_yr4J4?si=BXusBJG6JzgybuZ4",
+    "youtubeId": "t1E35_yr4J4",
+    "question": "What object is the cow standing on in clip number 4?",
+    "options": ["Roof", "Trampoline", "Slide", "Hay bale"],
+    "correct": "Trampoline"
+  },
+  {
+    "id": "vid_07",
+    "youtubeUrl": "https://youtube.com/shorts/XSI3EfAKUi4?si=PSo4NTvccFwr2u0I",
+    "youtubeId": "XSI3EfAKUi4",
+    "question": "What character poster is visible in the background room?",
+    "options": ["Naruto", "Luffy", "Goku", "Saitama"],
+    "correct": "Luffy"
+  },
+  {
+    "id": "vid_08",
+    "youtubeUrl": "https://youtube.com/shorts/zZ1W7R7hER4?si=Li7qQ8DnZADQg_CA",
+    "youtubeId": "zZ1W7R7hER4",
+    "question": "What object is used to attack the bee in the bathroom?",
+    "options": ["Fly swatter", "Aerosol can and lighter", "Rolled magazine", "Shoe"],
+    "correct": "Aerosol can and lighter"
+  },
+  {
+    "id": "vid_09",
+    "youtubeUrl": "https://youtube.com/shorts/OD-kuME_tuw?si=tYtb-NTgsicXwxcT",
+    "youtubeId": "OD-kuME_tuw",
+    "question": "Where is the airplane flying to?",
+    "options": ["Bangkok", "Detroit", "New York", "Chicago"],
+    "correct": "Detroit"
+  },
+  {
+    "id": "vid_10",
+    "youtubeUrl": "https://youtube.com/shorts/6bGGl0z1GDk?si=O4VyhbrO7WXkw7gB",
+    "youtubeId": "6bGGl0z1GDk",
+    "question": "What character's face is edited onto the pigeon at the end?",
+    "options": ["Roblox face", "Minecraft Steve", "Peppa Pig", "Shrek"],
+    "correct": "Roblox face"
+  },
+  {
+    "id": "vid_11",
+    "youtubeUrl": "https://youtube.com/shorts/e_E_915xjL0?si=qrUBTiW4sgFuEiVh",
+    "youtubeId": "e_E_915xjL0",
+    "question": "What cleaning tool is used in the pool area?",
+    "options": ["Squeegee mop", "Pressure washer", "Sponge", "Scrub brush"],
+    "correct": "Squeegee mop"
+  },
+  {
+    "id": "vid_12",
+    "youtubeUrl": "https://youtube.com/shorts/4vxkohkgdO4?si=1JJeHqvobMFLXVPs",
+    "youtubeId": "4vxkohkgdO4",
+    "question": "What is the answer to 44 x 9 written in the video?",
+    "options": ["198", "396", "594", "449"],
+    "correct": "396"
+  },
+  {
+    "id": "vid_13",
+    "youtubeUrl": "https://youtube.com/shorts/bOhQzgD2oK4?si=aRBqBuyquISxFkC0",
+    "youtubeId": "bOhQzgD2oK4",
+    "question": "How many students were included in the research study?",
+    "options": ["25", "39", "50", "100"],
+    "correct": "39"
+  },
+  {
+    "id": "vid_14",
+    "youtubeUrl": "https://youtube.com/shorts/6bGGl0z1GDk?si=O4VyhbrO7WXkw7gB",
+    "youtubeId": "6bGGl0z1GDk",
+    "question": "What animal appears with human eyes and lips in the video?",
+    "options": ["Pigeon", "Cat", "Dog", "Owl"],
+    "correct": "Pigeon"
+  },
+  {
+    "id": "vid_15",
+    "youtubeUrl": "https://youtube.com/shorts/e_E_915xjL0?si=qrUBTiW4sgFuEiVh",
+    "youtubeId": "e_E_915xjL0",
+    "question": "What color is the cup held by the person?",
+    "options": ["Red", "Blue", "Green", "Yellow"],
+    "correct": "Red"
+  },
+  {
+    "id": "vid_16",
+    "youtubeUrl": "https://youtube.com/shorts/4vxkohkgdO4?si=1JJeHqvobMFLXVPs",
+    "youtubeId": "4vxkohkgdO4",
+    "question": "What marker color is used to write on the paper?",
+    "options": ["Red", "Black", "Blue", "Green"],
+    "correct": "Red"
+  },
+  {
+    "id": "vid_17",
+    "youtubeUrl": "https://youtube.com/shorts/bOhQzgD2oK4?si=aRBqBuyquISxFkC0",
+    "youtubeId": "bOhQzgD2oK4",
+    "question": "How many total students were in the study?",
+    "options": ["39", "25", "42", "50"],
+    "correct": "39"
+  },
+  {
+    "id": "vid_18",
+    "youtubeUrl": "https://youtube.com/shorts/x7Bk7BQuCW0?si=6DLGx4xPmCR8cdgc",
+    "youtubeId": "x7Bk7BQuCW0",
+    "question": "What pattern is on the speaker's shirt?",
+    "options": ["Butterflies", "Polka dots", "Stripes", "Flowers"],
+    "correct": "Butterflies"
+  },
+  {
+    "id": "vid_19",
+    "youtubeUrl": "https://youtube.com/shorts/I_vAR6IFLgE?si=hZde-NQCMfw3C3RC",
+    "youtubeId": "I_vAR6IFLgE",
+    "question": "What food item does the person mention ordering?",
+    "options": ["Kirk burger", "Cheeseburger", "Hot dog", "Taco"],
+    "correct": "Kirk burger"
+  },
+  {
+    "id": "vid_20",
+    "youtubeUrl": "https://youtube.com/shorts/U34OJzV32_g?si=XxvGRWfDgDA95PGF",
+    "youtubeId": "U34OJzV32_g",
+    "question": "What delivery truck logo is visible in the background?",
+    "options": ["FedEx", "UPS", "DHL", "Amazon"],
+    "correct": "FedEx"
+  },
+  {
+    "id": "vid_21",
+    "youtubeUrl": "https://youtube.com/shorts/7ARk2U3LfjA?si=BgcLw8OP2_ZtNV7l",
+    "youtubeId": "7ARk2U3LfjA",
+    "question": "What color is the mask worn by the intruder?",
+    "options": ["Green", "Black", "Red", "Grey"],
+    "correct": "Green"
+  },
+  {
+    "id": "vid_22",
+    "youtubeUrl": "https://youtube.com/shorts/QXdBwBMpifM?si=Ae-V0TsVHP4U8nxq",
+    "youtubeId": "QXdBwBMpifM",
+    "question": "What famous person's name is mentioned in the video?",
+    "options": ["Stephen Hawking", "Albert Einstein", "Isaac Newton", "Elon Musk"],
+    "correct": "Stephen Hawking"
+  },
+  {
+    "id": "vid_23",
+    "youtubeUrl": "https://youtube.com/shorts/ZzwKBGsVzlk?si=fjR4-djqCGcFUcH2",
+    "youtubeId": "ZzwKBGsVzlk",
+    "question": "What phrase is spoken over the video audio?",
+    "options": ["500 cigarettes", "100 dogs", "Look behind you", "Good boy"],
+    "correct": "500 cigarettes"
+  },
+  {
+    "id": "vid_24",
+    "youtubeUrl": "https://youtube.com/shorts/ojrN0NfzOz8?si=AFZHz7ekX8NwyN0T",
+    "youtubeId": "ojrN0NfzOz8",
+    "question": "What color shorts is the defender wearing in the basketball clip?",
+    "options": ["Red", "Yellow", "Blue", "Black"],
+    "correct": "Red"
+  },
+  {
+    "id": "vid_25",
+    "youtubeUrl": "https://youtube.com/shorts/tvO4fUkGQ-c?si=Bdo8g2hUxSExF3jY",
+    "youtubeId": "tvO4fUkGQ-c",
+    "question": "What brand logo is visible on the person's sneakers?",
+    "options": ["Adidas", "Nike", "Puma", "Reebok"],
+    "correct": "Adidas"
+  },
+  {
+    "id": "vid_26",
+    "youtubeUrl": "https://youtube.com/shorts/xMJAIDJKezw?si=YqmG5cwJNYNwzXvj",
+    "youtubeId": "xMJAIDJKezw",
+    "question": "What object does the real giraffe climb onto at the end?",
+    "options": ["Tree trunk", "Large rock", "Jeep hood", "Wooden fence"],
+    "correct": "Tree trunk"
+  },
+  {
+    "id": "vid_27",
+    "youtubeUrl": "https://youtube.com/shorts/KP5G5W3aOjE?si=GYl5f4rM-VbEDTni",
+    "youtubeId": "KP5G5W3aOjE",
+    "question": "What color suit jacket is Christian Bale wearing in the video?",
+    "options": ["Black", "White", "Navy blue", "Red"],
+    "correct": "Black"
+  },
+  {
+    "id": "vid_28",
+    "youtubeUrl": "https://youtube.com/shorts/_p-Sa2fmAEw?si=bE8C5rSiApy7TpvM",
+    "youtubeId": "_p-Sa2fmAEw",
+    "question": "What color gloves is the boxing referee wearing?",
+    "options": ["Blue", "Red", "Black", "White"],
+    "correct": "Blue"
   }
 ]
