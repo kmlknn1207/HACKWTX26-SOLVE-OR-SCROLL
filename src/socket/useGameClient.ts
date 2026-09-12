@@ -15,7 +15,10 @@ const SERVER_KEY = 'sos.serverUrl';
 function getOrCreatePlayerId(): string {
   const existing = sessionStorage.getItem(PLAYER_KEY);
   if (existing) return existing;
-  const id = crypto.randomUUID();
+  const id =
+    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : "id-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
   sessionStorage.setItem(PLAYER_KEY, id);
   return id;
 }
