@@ -1,0 +1,23 @@
+[
+  {
+    "id": "v1",
+    "youtubeId": "jNQXAC9IVRw",
+    "question": "Placeholder: what animal is mentioned in this famous early YouTube video?",
+    "options": ["Elephant", "Zoo animals / elephants", "A cat", "A dog"],
+    "correct": 1
+  },
+  {
+    "id": "v2",
+    "youtubeId": "M7lc1UVf-VE",
+    "question": "Placeholder: this clip is YouTube’s IFrame API demo. What is it demonstrating?",
+    "options": ["Live chat", "Embedding and controlling a YouTube player", "YouTube Shorts editing", "Ad targeting"],
+    "correct": 1
+  },
+  {
+    "id": "v3",
+    "youtubeId": "aqz-KE-bpKQ",
+    "question": "Placeholder: replace this entry with a real Short plus a question about it. What should `correct` store?",
+    "options": ["The 0-based index of the right option", "A YouTube URL", "Elapsed seconds", "The player id"],
+    "correct": 0
+  }
+]

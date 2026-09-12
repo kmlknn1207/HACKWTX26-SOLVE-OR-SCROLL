@@ -1,0 +1,20 @@
+[
+  {
+    "id": "p1",
+    "difficulty": "easy",
+    "prompt": "What is 17 + 25?",
+    "answer": "42"
+  },
+  {
+    "id": "p2",
+    "difficulty": "medium",
+    "prompt": "A sequence starts 2, 6, 18, 54, … What is the next number?",
+    "answer": "162"
+  },
+  {
+    "id": "p3",
+    "difficulty": "hard",
+    "prompt": "If 3 cats catch 3 mice in 3 minutes, how many minutes do 100 cats need to catch 100 mice?",
+    "answer": "3"
+  }
+]

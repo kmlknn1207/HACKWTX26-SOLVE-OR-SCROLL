@@ -1,0 +1,86 @@
+.lobby,
+.results {
+  max-width: 720px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.split {
+  display: flex;
+  min-height: 100%;
+}
+
+.player-pane {
+  flex: 1;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+  min-width: 0;
+}
+
+.player-pane:last-child {
+  border-right: none;
+}
+
+.timer {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.prompt {
+  font-size: 1.1rem;
+}
+
+.meta,
+.error {
+  color: #444;
+}
+
+.error {
+  color: #a00;
+}
+
+input,
+button {
+  font: inherit;
+  margin: 0.25rem 0.25rem 0.25rem 0;
+}
+
+.options {
+  list-style: none;
+  padding: 0;
+}
+
+.options button,
+.player-pane button,
+.lobby button,
+.results button {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+}
+
+.video-player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 70vh;
+  background: #000;
+}
+
+.video-player-host,
+.video-player-host iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.round-breakdown {
+  padding-left: 1.25rem;
+}
