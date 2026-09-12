@@ -9,6 +9,12 @@
   font-size: 1.1rem;
 }
 
+.math-display {
+  margin: 1rem 0;
+  font-size: 1.35rem;
+  overflow-x: auto;
+}
+
 .meta,
 .error {
   color: #444;

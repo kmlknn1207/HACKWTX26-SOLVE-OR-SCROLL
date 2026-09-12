@@ -95,6 +95,17 @@ function answersMatch(expected, given) {
   return normalize(expected) === normalize(given);
 }
 
+function problemAnswerMatches(problem, given) {
+  const expected = Number(problem.answer);
+  const n = Number(String(given ?? '').trim().replace(/,/g, ''));
+  if (!Number.isFinite(expected) || !Number.isFinite(n)) {
+    return answersMatch(problem.answer, given);
+  }
+  const tolerance = Number(problem.tolerance);
+  const allowed = Number.isFinite(tolerance) ? tolerance : 0;
+  return Math.abs(n - expected) <= allowed;
+}
+
 function pickRandom(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
@@ -176,6 +187,7 @@ function publicRoomState(room) {
           id: room.currentProblem.id,
           difficulty: room.currentProblem.difficulty,
           question: room.currentProblem.question,
+          latex: room.currentProblem.latex ?? null,
         }
       : null,
     players: getPlayerList(room).map((p) => ({
@@ -397,7 +409,7 @@ io.on('connection', (socket) => {
     if (!player || player.socketId !== socket.id) return;
     if (player.phase !== 'solving') return;
 
-    if (!answersMatch(room.currentProblem.answer, answer ?? '')) {
+    if (!problemAnswerMatches(room.currentProblem, answer ?? '')) {
       socket.emit('problem-incorrect');
       return;
     }

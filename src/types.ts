@@ -14,6 +14,7 @@ export interface PublicProblem {
   id: string;
   difficulty: Difficulty;
   question: string;
+  latex?: string;
 }
 
 export interface PlaylistVideo {

@@ -1,110 +1,122 @@
 [
   {
-    "id": "p1",
+    "id": "e1",
     "difficulty": "easy",
-    "question": "12 + 47 = ?",
-    "answer": "59"
+    "question": "Evaluate the definite integral of x from 0 to 2.",
+    "latex": "\\int_{0}^{2} x \\, dx",
+    "answer": 2,
+    "tolerance": 0.01
   },
   {
-    "id": "p2",
+    "id": "e2",
     "difficulty": "easy",
-    "question": "What is 17 + 25?",
-    "answer": "42"
+    "question": "Evaluate the definite integral of 2x from 0 to 3.",
+    "latex": "\\int_{0}^{3} 2x \\, dx",
+    "answer": 9,
+    "tolerance": 0.01
   },
   {
-    "id": "p3",
+    "id": "e3",
     "difficulty": "easy",
-    "question": "9 × 8 = ?",
-    "answer": "72"
+    "question": "Evaluate the definite integral of x^2 from 0 to 2.",
+    "latex": "\\int_{0}^{2} x^{2} \\, dx",
+    "answer": 2.667,
+    "tolerance": 0.01
   },
   {
-    "id": "p4",
+    "id": "e4",
     "difficulty": "easy",
-    "question": "100 − 37 = ?",
-    "answer": "63"
+    "question": "Evaluate the definite integral of 3 from 1 to 4.",
+    "latex": "\\int_{1}^{4} 3 \\, dx",
+    "answer": 9,
+    "tolerance": 0.01
   },
   {
-    "id": "p5",
+    "id": "e5",
     "difficulty": "easy",
-    "question": "What is 15% of 80?",
-    "answer": "12"
+    "question": "Evaluate the definite integral of 4x^3 from 0 to 1.",
+    "latex": "\\int_{0}^{1} 4x^{3} \\, dx",
+    "answer": 1,
+    "tolerance": 0.01
   },
   {
-    "id": "p6",
-    "difficulty": "easy",
-    "question": "If a dozen eggs cost $6, what does one egg cost in dollars?",
-    "answer": "0.5"
-  },
-  {
-    "id": "p7",
+    "id": "m1",
     "difficulty": "medium",
-    "question": "A sequence starts 2, 6, 18, 54, … What is the next number?",
-    "answer": "162"
+    "question": "Evaluate the definite integral of cos(x) from 0 to π/2.",
+    "latex": "\\int_{0}^{\\pi/2} \\cos(x) \\, dx",
+    "answer": 1,
+    "tolerance": 0.01
   },
   {
-    "id": "p8",
+    "id": "m2",
     "difficulty": "medium",
-    "question": "What is the next prime after 31?",
-    "answer": "37"
+    "question": "Evaluate the definite integral of e^x from 0 to 1.",
+    "latex": "\\int_{0}^{1} e^{x} \\, dx",
+    "answer": 1.718,
+    "tolerance": 0.01
   },
   {
-    "id": "p9",
+    "id": "m3",
     "difficulty": "medium",
-    "question": "Solve for x: 3x + 7 = 22",
-    "answer": "5"
+    "question": "Evaluate the definite integral of 1/√x from 1 to 4.",
+    "latex": "\\int_{1}^{4} \\frac{1}{\\sqrt{x}} \\, dx",
+    "answer": 2,
+    "tolerance": 0.01
   },
   {
-    "id": "p10",
+    "id": "m4",
     "difficulty": "medium",
-    "question": "A rectangle is 8 by 5. What is its area?",
-    "answer": "40"
+    "question": "Evaluate the definite integral of sin(x) from 0 to π.",
+    "latex": "\\int_{0}^{\\pi} \\sin(x) \\, dx",
+    "answer": 2,
+    "tolerance": 0.01
   },
   {
-    "id": "p11",
+    "id": "m5",
     "difficulty": "medium",
-    "question": "How many minutes are in 3.5 hours?",
-    "answer": "210"
+    "question": "Evaluate the definite integral of 1/x from 1 to 2.",
+    "latex": "\\int_{1}^{2} \\frac{1}{x} \\, dx",
+    "answer": 0.693,
+    "tolerance": 0.01
   },
   {
-    "id": "p12",
-    "difficulty": "medium",
-    "question": "If 5 machines make 5 widgets in 5 minutes, how many minutes do 100 machines need to make 100 widgets?",
-    "answer": "5"
-  },
-  {
-    "id": "p13",
+    "id": "h1",
     "difficulty": "hard",
-    "question": "If 3 cats catch 3 mice in 3 minutes, how many minutes do 100 cats need to catch 100 mice?",
-    "answer": "3"
+    "question": "Evaluate the definite integral of x e^(x^2) from 0 to 1.",
+    "latex": "\\int_{0}^{1} x e^{x^{2}} \\, dx",
+    "answer": 0.859,
+    "tolerance": 0.01
   },
   {
-    "id": "p14",
+    "id": "h2",
     "difficulty": "hard",
-    "question": "What is 2^10?",
-    "answer": "1024"
+    "question": "Evaluate the definite integral of tan(x) sec^2(x) from 0 to π/4.",
+    "latex": "\\int_{0}^{\\pi/4} \\tan(x)\\sec^{2}(x) \\, dx",
+    "answer": 0.5,
+    "tolerance": 0.01
   },
   {
-    "id": "p15",
+    "id": "h3",
     "difficulty": "hard",
-    "question": "A snail climbs 3 feet up a 10-foot well each day and slides 2 feet at night. On which day does it reach the top?",
-    "answer": "8"
+    "question": "Evaluate the definite integral of x sin(x) from 0 to π.",
+    "latex": "\\int_{0}^{\\pi} x\\sin(x) \\, dx",
+    "answer": 3.1416,
+    "tolerance": 0.01
   },
   {
-    "id": "p16",
+    "id": "h4",
     "difficulty": "hard",
-    "question": "How many distinct ways can you arrange the letters in the word MATH?",
-    "answer": "24"
+    "question": "Evaluate the definite integral of ln(x) from 1 to e.",
+    "latex": "\\int_{1}^{e} \\ln(x) \\, dx",
+    "answer": 1,
+    "tolerance": 0.01
   },
   {
-    "id": "p17",
+    "id": "h5",
     "difficulty": "hard",
-    "question": "The average of 4, 8, and x is 10. What is x?",
-    "answer": "18"
-  },
-  {
-    "id": "p18",
-    "difficulty": "hard",
-    "question": "A clock shows 3:15. What is the smaller angle in degrees between the hour and minute hands?",
-    "answer": "7.5"
+    "question": "Evaluate the definite integral of x^2 e^x from 0 to 1.",
+    "latex": "\\int_{0}^{1} x^{2} e^{x} \\, dx",
+    "answer": 0.718,
+    "tolerance": 0.01
   }
 ]
