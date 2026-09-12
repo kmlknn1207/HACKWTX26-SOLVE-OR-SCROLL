@@ -1,21 +1,34 @@
-import type { GazeStatusEvent } from '../types';
+import type { GazeStatusPayload } from '../types';
+
+type GazeEmitter = (payload: GazeStatusPayload) => void;
+
+let emitGaze: GazeEmitter | null = null;
 
 /**
- * Teammate CV / gaze module should call this (also available as `window.onGazeStatus`).
- *
- * Example:
- *   onGazeStatus({ playerId: 1, isWatchingScreen: false, timestamp: Date.now() })
+ * Called by the game client once the Socket.io connection exists.
+ * CV teammates should not call this — use `reportGazeStatus` only.
  */
-export function onGazeStatus(event: GazeStatusEvent): void {
-  console.log('[gaze]', event);
+export function bindGazeEmitter(emitter: GazeEmitter | null): void {
+  emitGaze = emitter;
+}
 
-  // HOOK: penalty / flagging for later.
-  // When `event.isWatchingScreen` is false during WATCHING_VIDEO (or SOLVING),
-  // apply a time penalty, increment a "looked away" counter, or flag the round.
-  // Keep this function as the only integration surface so the CV module
-  // does not need to know about the game reducer.
+/**
+ * CV / webcam teammate entry point.
+ *
+ * Call this whenever gaze tracking updates:
+ *   reportGazeStatus({ isWatchingScreen: true })
+ *
+ * For now this only emits the `gaze-status` socket event. No scoring
+ * penalty is applied yet — the server logs and broadcasts the sample.
+ */
+export function reportGazeStatus({ isWatchingScreen }: GazeStatusPayload): void {
+  console.log('[gaze]', { isWatchingScreen, at: Date.now() });
+  emitGaze?.({ isWatchingScreen });
 }
 
 export function installGazeBridge(): void {
-  window.onGazeStatus = onGazeStatus;
+  window.reportGazeStatus = reportGazeStatus;
+  window.onGazeStatus = (event) => {
+    reportGazeStatus({ isWatchingScreen: event.isWatchingScreen });
+  };
 }

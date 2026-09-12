@@ -2,19 +2,109 @@
   {
     "id": "p1",
     "difficulty": "easy",
-    "prompt": "What is 17 + 25?",
-    "answer": "42"
+    "question": "12 + 47 = ?",
+    "answer": "59"
   },
   {
     "id": "p2",
-    "difficulty": "medium",
-    "prompt": "A sequence starts 2, 6, 18, 54, … What is the next number?",
-    "answer": "162"
+    "difficulty": "easy",
+    "question": "What is 17 + 25?",
+    "answer": "42"
   },
   {
     "id": "p3",
+    "difficulty": "easy",
+    "question": "9 × 8 = ?",
+    "answer": "72"
+  },
+  {
+    "id": "p4",
+    "difficulty": "easy",
+    "question": "100 − 37 = ?",
+    "answer": "63"
+  },
+  {
+    "id": "p5",
+    "difficulty": "easy",
+    "question": "What is 15% of 80?",
+    "answer": "12"
+  },
+  {
+    "id": "p6",
+    "difficulty": "easy",
+    "question": "If a dozen eggs cost $6, what does one egg cost in dollars?",
+    "answer": "0.5"
+  },
+  {
+    "id": "p7",
+    "difficulty": "medium",
+    "question": "A sequence starts 2, 6, 18, 54, … What is the next number?",
+    "answer": "162"
+  },
+  {
+    "id": "p8",
+    "difficulty": "medium",
+    "question": "What is the next prime after 31?",
+    "answer": "37"
+  },
+  {
+    "id": "p9",
+    "difficulty": "medium",
+    "question": "Solve for x: 3x + 7 = 22",
+    "answer": "5"
+  },
+  {
+    "id": "p10",
+    "difficulty": "medium",
+    "question": "A rectangle is 8 by 5. What is its area?",
+    "answer": "40"
+  },
+  {
+    "id": "p11",
+    "difficulty": "medium",
+    "question": "How many minutes are in 3.5 hours?",
+    "answer": "210"
+  },
+  {
+    "id": "p12",
+    "difficulty": "medium",
+    "question": "If 5 machines make 5 widgets in 5 minutes, how many minutes do 100 machines need to make 100 widgets?",
+    "answer": "5"
+  },
+  {
+    "id": "p13",
     "difficulty": "hard",
-    "prompt": "If 3 cats catch 3 mice in 3 minutes, how many minutes do 100 cats need to catch 100 mice?",
+    "question": "If 3 cats catch 3 mice in 3 minutes, how many minutes do 100 cats need to catch 100 mice?",
     "answer": "3"
+  },
+  {
+    "id": "p14",
+    "difficulty": "hard",
+    "question": "What is 2^10?",
+    "answer": "1024"
+  },
+  {
+    "id": "p15",
+    "difficulty": "hard",
+    "question": "A snail climbs 3 feet up a 10-foot well each day and slides 2 feet at night. On which day does it reach the top?",
+    "answer": "8"
+  },
+  {
+    "id": "p16",
+    "difficulty": "hard",
+    "question": "How many distinct ways can you arrange the letters in the word MATH?",
+    "answer": "24"
+  },
+  {
+    "id": "p17",
+    "difficulty": "hard",
+    "question": "The average of 4, 8, and x is 10. What is x?",
+    "answer": "18"
+  },
+  {
+    "id": "p18",
+    "difficulty": "hard",
+    "question": "A clock shows 3:15. What is the smaller angle in degrees between the hour and minute hands?",
+    "answer": "7.5"
   }
 ]

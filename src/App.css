@@ -1,29 +1,8 @@
-.lobby,
+.screen,
 .results {
   max-width: 720px;
   margin: 2rem auto;
   padding: 1rem;
-}
-
-.split {
-  display: flex;
-  min-height: 100%;
-}
-
-.player-pane {
-  flex: 1;
-  padding: 1rem;
-  border-right: 1px solid #ccc;
-  min-width: 0;
-}
-
-.player-pane:last-child {
-  border-right: none;
-}
-
-.timer {
-  font-size: 1.5rem;
-  font-variant-numeric: tabular-nums;
 }
 
 .prompt {
@@ -39,10 +18,24 @@
   color: #a00;
 }
 
+label {
+  display: block;
+  margin: 0.75rem 0;
+}
+
 input,
-button {
+button,
+select {
   font: inherit;
   margin: 0.25rem 0.25rem 0.25rem 0;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  padding: 0.4rem 0.5rem;
 }
 
 .options {
@@ -51,9 +44,7 @@ button {
 }
 
 .options button,
-.player-pane button,
-.lobby button,
-.results button {
+.screen button {
   display: block;
   width: 100%;
   max-width: 28rem;

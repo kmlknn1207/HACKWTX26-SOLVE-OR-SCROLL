@@ -1,12 +1,19 @@
-export const TOTAL_ROUNDS = 5;
-export const VIDEO_INTERRUPT_MS = 30_000;
-export const PLAYER_IDS = [1, 2] as const;
+import constants from '../../shared/constants.json';
 
-/** Round 1–5 difficulties. Extra problems of that difficulty are preferred, with fallback. */
-export const ROUND_DIFFICULTY = [
-  'easy',
-  'easy',
-  'medium',
-  'medium',
-  'hard',
-] as const;
+export const TOTAL_ROUNDS = constants.TOTAL_ROUNDS;
+export const FIRST_SOLVER_VIDEO_COUNT = constants.FIRST_SOLVER_VIDEO_COUNT;
+export const SECOND_SOLVER_VIDEO_COUNT = constants.SECOND_SOLVER_VIDEO_COUNT;
+export const FIRST_SOLVER_POINTS = constants.FIRST_SOLVER_POINTS;
+export const SECOND_SOLVER_POINTS = constants.SECOND_SOLVER_POINTS;
+export const SERVER_PORT = constants.SERVER_PORT;
+export const ROUND_TRANSITION_MS = constants.ROUND_TRANSITION_MS;
+
+function inferServerUrl(): string {
+  if (import.meta.env.VITE_SERVER_URL) return import.meta.env.VITE_SERVER_URL;
+  if (typeof window === 'undefined') return `http://localhost:${SERVER_PORT}`;
+  // Same origin as the page: Vite proxies /socket.io to :3001, and the
+  // production server already serves UI + sockets together.
+  return window.location.origin;
+}
+
+export const DEFAULT_SERVER_URL = inferServerUrl();

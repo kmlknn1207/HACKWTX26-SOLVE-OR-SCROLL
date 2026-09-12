@@ -8,10 +8,11 @@ declare global {
       PlayerState: { ENDED: number; PLAYING: number; PAUSED: number };
     };
     /** CV / gaze-tracking teammate entry point */
+    reportGazeStatus?: (payload: { isWatchingScreen: boolean }) => void;
     onGazeStatus?: (event: {
-      playerId: 1 | 2;
+      playerId?: string | number;
       isWatchingScreen: boolean;
-      timestamp: number;
+      timestamp?: number;
     }) => void;
   }
 

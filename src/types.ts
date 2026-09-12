@@ -1,65 +1,67 @@
-export type PlayerId = 1 | 2;
-
-export type PlayerPhase =
-  | 'IDLE'
-  | 'SOLVING'
-  | 'WATCHING_VIDEO'
-  | 'ANSWERING_VIDEO_QUESTION'
-  | 'ROUND_COMPLETE'
-  | 'GAME_COMPLETE';
-
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
-export interface Problem {
+export type RoomPhase = 'lobby' | 'playing' | 'round_transition' | 'finished';
+
+export type PlayerPhase =
+  | 'lobby'
+  | 'solving'
+  | 'watching'
+  | 'question'
+  | 'round_complete'
+  | 'game_complete';
+
+export interface PublicProblem {
   id: string;
   difficulty: Difficulty;
-  prompt: string;
-  answer: string;
+  question: string;
 }
 
-export interface VideoClip {
+export interface PlaylistVideo {
   id: string;
   youtubeId: string;
+}
+
+export interface VideoQuestion {
+  videoId: string;
   question: string;
   options: string[];
-  /** 0-based index into `options`. */
-  correct: number;
+}
+
+export interface PublicPlayer {
+  playerId: string;
+  slot: 1 | 2;
+  ready: boolean;
+  connected: boolean;
+  phase: PlayerPhase;
+  solveRank: 1 | 2 | null;
+  videoCount: number;
+  roundPoints: number;
+  videoCorrect: boolean | null;
 }
 
 export interface RoundRecord {
-  roundIndex: number;
+  round: number;
+  solveRank: 1 | 2 | null;
+  videoCorrect: boolean | null;
+  points: number;
   problemId: string;
-  timeMs: number;
-  videosWatched: number;
-  wrongVideoAnswers: number;
 }
 
-export interface PlayerRuntime {
-  phase: PlayerPhase;
-  answerInput: string;
-  answerError: boolean;
-  currentVideo: VideoClip | null;
-  videosWatchedThisRound: number;
-  wrongVideoAnswersThisRound: number;
-  usedVideoIds: string[];
-  roundStartedAt: number | null;
-  frozenTimeMs: number | null;
-  solvingAccumulatedMs: number;
-  lastSolvingTickAt: number | null;
-  interruptsFired: number;
-  history: RoundRecord[];
+export interface RoomState {
+  roomCode: string;
+  phase: RoomPhase;
+  round: number;
+  totalRounds: number;
+  difficulty: Difficulty;
+  problem: PublicProblem | null;
+  players: PublicPlayer[];
+  scores: Record<string, number>;
+  roundHistory: Record<string, RoundRecord[]>;
+  gazes: Record<string, boolean>;
+  points: { first: number; second: number };
+  winnerSlot: 0 | 1 | 2 | null;
 }
 
-export interface GameState {
-  players: Record<PlayerId, PlayerRuntime>;
-  roundIndex: number;
-  currentProblem: Problem | null;
-  usedProblemIds: string[];
-  now: number;
-}
-
-export interface GazeStatusEvent {
-  playerId: PlayerId;
+export interface GazeStatusPayload {
   isWatchingScreen: boolean;
-  timestamp: number;
 }

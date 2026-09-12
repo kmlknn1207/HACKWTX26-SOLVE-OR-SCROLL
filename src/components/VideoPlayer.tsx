@@ -67,6 +67,7 @@ export function VideoPlayer({ youtubeId, onEnded }: VideoPlayerProps) {
             event.target.playVideo();
           },
           onStateChange: (event) => {
+            if (cancelled) return;
             const ended = window.YT?.PlayerState?.ENDED ?? 0;
             if (event.data === ended) onEndedRef.current();
           },
