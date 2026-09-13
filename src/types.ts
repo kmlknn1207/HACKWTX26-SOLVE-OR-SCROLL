@@ -26,6 +26,8 @@ export interface VideoQuestion {
   videoId: string;
   question: string;
   options: string[];
+  reelNumber?: number;
+  reelCount?: number;
 }
 
 export interface PublicPlayer {
@@ -61,6 +63,8 @@ export interface RoomState {
   gazes: Record<string, boolean>;
   points: { first: number; second: number };
   winnerSlot: 0 | 1 | 2 | null;
+  solveDeadlineAt?: number | null;
+  problemTimeLimitMs?: number;
 }
 
 export interface GazeStatusPayload {

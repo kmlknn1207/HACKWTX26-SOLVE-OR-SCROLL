@@ -17,6 +17,9 @@ export function QuestionScreen({ question, onSubmit }: QuestionScreenProps) {
   return (
     <main className="screen">
       <h1>Video question</h1>
+      {question.reelNumber && question.reelCount && (
+        <p className="meta">From reel {question.reelNumber} of {question.reelCount}</p>
+      )}
       <p className="prompt">{question.question}</p>
       <ul className="options">
         {question.options.map((option) => (

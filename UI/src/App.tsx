@@ -14,6 +14,7 @@ import { VideoPlayer } from "../../src/components/VideoPlayer";
 import { installGazeBridge } from "../../src/gaze/gazeBridge";
 import { useAttentionDetector } from "../../src/gaze/useAttentionDetector";
 import { AttentionOverlay } from "../../src/gaze/AttentionOverlay";
+import { useCountdown } from "../../src/hooks/useCountdown";
 import { useGameClient } from "../../src/socket/useGameClient";
 import type { Difficulty, PlaylistVideo, PublicPlayer, RoomState, VideoQuestion } from "../../src/types";
 
@@ -88,6 +89,41 @@ function RightStrip() {
           <path className="doodle-line doodle-arrow" d="M40 112l-19 17m0 0 2-10m-2 10 10-2" />
           <path className="doodle-line doodle-sun" d="M12 177h18M21 168v18M14.5 170.5l13 13M27.5 170.5l-13 13" />
         </svg>
+      </div>
+    </div>
+  );
+}
+
+function ScoreBar({ room, me }: { room: RoomState | null; me: PublicPlayer | null }) {
+  const you = me ? (room?.scores[me.playerId] ?? 0) : 0;
+  const opponent = room?.players.find((p) => p.playerId !== me?.playerId);
+  const them = opponent ? (room?.scores[opponent.playerId] ?? 0) : 0;
+
+  return (
+    <div className="flex-shrink-0 px-3 pt-3">
+      <div
+        className="flex items-center justify-between rounded-2xl px-4 py-2.5"
+        style={{ background: "#111", color: "#fff" }}
+      >
+        <div>
+          <p className="font-mono text-[10px] tracking-widest" style={{ color: "rgba(255,255,255,0.45)" }}>
+            YOU{me ? ` · P${me.slot}` : ""}
+          </p>
+          <p className="font-mono font-bold tabular-nums" style={{ fontSize: 22, color: "#BEFF00", lineHeight: 1.1 }}>
+            {you}
+          </p>
+        </div>
+        <p className="font-mono text-xs tracking-widest" style={{ color: "rgba(255,255,255,0.35)" }}>
+          VS
+        </p>
+        <div className="text-right">
+          <p className="font-mono text-[10px] tracking-widest" style={{ color: "rgba(255,255,255,0.45)" }}>
+            {opponent ? `P${opponent.slot}` : "OPPONENT"}
+          </p>
+          <p className="font-mono font-bold tabular-nums" style={{ fontSize: 22, color: "#FFD600", lineHeight: 1.1 }}>
+            {them}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -431,9 +467,27 @@ function ProblemPanel({
 
   return (
     <div className="flex-1 flex flex-col gap-4 px-5 py-4 overflow-y-auto hide-scrollbar">
+      <div className="flex items-center justify-between">
+        <p className="font-mono text-xs" style={{ color: "rgba(0,0,0,0.38)", letterSpacing: "0.08em" }}>
+          ROUND {room.round} / {room.totalRounds}
+        </p>
+        <div
+          className="flex items-center justify-center rounded-full font-mono font-bold text-white"
+          style={{
+            width: 44,
+            height: 44,
+            background: secondsLeft > 10 ? "#111" : "#CC2200",
+            fontSize: 16,
+            transition: "background 0.3s ease",
+            flexShrink: 0,
+          }}
+        >
+          {secondsLeft}
+        </div>
+      </div>
       <div className="rounded-2xl p-5" style={{ background: "#111" }}>
         <p className="font-mono text-xs mb-3" style={{ color: "rgba(255,255,255,0.3)", letterSpacing: "0.08em" }}>
-          ROUND {room.round} / {room.totalRounds} · {room.difficulty.toUpperCase()}
+          {room.difficulty.toUpperCase()} · 60 SECONDS
         </p>
         {problem?.latex ? (
           <div className="math-display math-display-light">
@@ -470,6 +524,7 @@ function ProblemPanel({
         </div>
         <button
           type="submit"
+          disabled={expired}
           className="w-full py-4 rounded-2xl font-bold"
           style={{ background: "#d98878", color: "#000", fontFamily: "'DM Serif Display', serif" }}
           disabled={answerBlocked}
@@ -490,7 +545,9 @@ function QuestionPanel({ question, onSubmit }: { question: VideoQuestion | null;
     <div className="flex-1 flex flex-col gap-4 px-5 py-4 overflow-y-auto hide-scrollbar">
       <div className="rounded-2xl p-5" style={{ background: "#111" }}>
         <p className="font-mono text-xs mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
-          VIDEO QUESTION
+          {question.reelNumber && question.reelCount
+            ? `QUESTION FROM REEL ${question.reelNumber} OF ${question.reelCount}`
+            : "VIDEO QUESTION"}
         </p>
         <p style={{ fontFamily: "'DM Serif Display', serif", fontSize: 21, color: "#fff", lineHeight: 1.3 }}>
           {question.question}
@@ -670,6 +727,7 @@ export default function App() {
     >
       <LeftStrip />
       <div className="flex-1 flex flex-col overflow-hidden" style={{ minWidth: 0 }}>
+        <ScoreBar room={room} me={me} />
         {main}
         <BottomNav accent={accent} />
       </div>
