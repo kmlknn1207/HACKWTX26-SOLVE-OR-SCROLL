@@ -196,7 +196,7 @@ function FeedScreen({
 
   // === CV: attention detector ===
   const [restartToken, setRestartToken] = useState(0);
-  const { state: gazeState } = useAttentionDetector({
+  const { state: gazeState, error: gazeError } = useAttentionDetector({
     enabled: true,
   });
   const isDistracted = gazeState === "distracted";
@@ -280,6 +280,14 @@ function FeedScreen({
           </div>
         );
       })}
+      {gazeError && (
+        <div
+          className="absolute left-3 right-3 bottom-3 z-30 rounded-xl px-3 py-2 text-xs font-mono"
+          style={{ background: "rgba(17,17,17,0.92)", color: "#f2e8d5" }}
+        >
+          {gazeError}
+        </div>
+      )}
       <AttentionOverlay
         state={gazeState}
         onReturn={() => setRestartToken((t) => t + 1)}

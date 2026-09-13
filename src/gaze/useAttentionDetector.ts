@@ -26,8 +26,26 @@ function bsScore(bs: BlendshapeCategory[], name: string): number {
   return c ? c.score : 0;
 }
 
+function cameraErrorMessage(err: unknown): string {
+  if (typeof window !== 'undefined' && !window.isSecureContext) {
+    return 'Camera needs a secure page. On this laptop open http://localhost:5173 — not the Wi‑Fi IP, and not a Google search.';
+  }
+  if (!navigator.mediaDevices?.getUserMedia) {
+    return 'This browser has no camera API. Use Chrome or Edge, not the search box on google.com.';
+  }
+  const name = err && typeof err === 'object' && 'name' in err ? String((err as { name: string }).name) : '';
+  if (name === 'NotAllowedError' || name === 'PermissionDeniedError') {
+    return 'Camera permission is blocked. Allow the camera for this site in Chrome/Edge settings, then reload.';
+  }
+  if (name === 'NotFoundError' || name === 'OverconstrainedError') {
+    return 'No camera was found on this laptop.';
+  }
+  return err instanceof Error ? err.message : 'Camera or face tracking failed to start.';
+}
+
 export function useAttentionDetector({ enabled, onDistracted }: Options) {
   const [state, setState] = useState<AttentionState>('idle');
+  const [error, setError] = useState<string | null>(null);
   const stateRef = useRef<AttentionState>('idle');
   const onDistractedRef = useRef(onDistracted);
   onDistractedRef.current = onDistracted;
@@ -114,27 +132,41 @@ export function useAttentionDetector({ enabled, onDistracted }: Options) {
       rafId = requestAnimationFrame(loop);
     };
 
+    const createLandmarker = async (vision: Awaited<ReturnType<typeof FilesetResolver.forVisionTasks>>, delegate: 'GPU' | 'CPU') =>
+      FaceLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath:
+            'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
+          delegate,
+        },
+        outputFaceBlendshapes: true,
+        outputFacialTransformationMatrixes: false,
+        runningMode: 'VIDEO',
+        numFaces: 1,
+      });
+
     const init = async () => {
       try {
+        setError(null);
+        if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+          throw new Error(cameraErrorMessage(null));
+        }
+
         const vision = await FilesetResolver.forVisionTasks(
           'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.9/wasm',
         );
         if (cancelled) return;
 
-        landmarker = await FaceLandmarker.createFromOptions(vision, {
-          baseOptions: {
-            modelAssetPath:
-              'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
-            delegate: 'GPU',
-          },
-          outputFaceBlendshapes: true,
-          outputFacialTransformationMatrixes: false,
-          runningMode: 'VIDEO',
-          numFaces: 1,
-        });
+        try {
+          landmarker = await createLandmarker(vision, 'GPU');
+        } catch {
+          landmarker = await createLandmarker(vision, 'CPU');
+        }
         if (cancelled) return;
 
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user' },
+        });
         if (cancelled) {
           stream.getTracks().forEach(t => t.stop());
           return;
@@ -159,12 +191,14 @@ export function useAttentionDetector({ enabled, onDistracted }: Options) {
         await new Promise<void>(resolve => {
           videoEl!.onloadedmetadata = () => resolve();
         });
+        await videoEl.play().catch(() => undefined);
         if (cancelled) return;
 
         setAttentionState('attentive');
         loop();
       } catch (err) {
         console.error('[gaze] init failed:', err);
+        if (!cancelled) setError(cameraErrorMessage(err));
       }
     };
 
@@ -178,8 +212,9 @@ export function useAttentionDetector({ enabled, onDistracted }: Options) {
       landmarker?.close();
       setState('idle');
       stateRef.current = 'idle';
+      setError(null);
     };
   }, [enabled]);
 
-  return { state };
+  return { state, error };
 }
