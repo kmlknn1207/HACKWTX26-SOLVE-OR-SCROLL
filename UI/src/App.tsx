@@ -553,7 +553,9 @@ function QuestionPanel({ question, onSubmit }: { question: VideoQuestion | null;
     <div className="flex-1 flex flex-col gap-4 px-5 py-4 overflow-y-auto hide-scrollbar">
       <div className="rounded-2xl p-5" style={{ background: "#111" }}>
         <p className="font-mono text-xs mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
-          VIDEO QUESTION
+          {question.reelNumber && question.reelCount
+            ? `QUESTION FROM REEL ${question.reelNumber} OF ${question.reelCount}`
+            : "VIDEO QUESTION"}
         </p>
         <p style={{ fontFamily: "'DM Serif Display', serif", fontSize: 21, color: "#fff", lineHeight: 1.3 }}>
           {question.question}

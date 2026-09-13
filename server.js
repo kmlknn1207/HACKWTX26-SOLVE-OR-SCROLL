@@ -239,6 +239,8 @@ function emitPrivatePlaylist(socket, player) {
           videoId: player.videoQuestion.videoId,
           question: player.videoQuestion.question,
           options: player.videoQuestion.options,
+          reelNumber: player.videoQuestion.reelNumber,
+          reelCount: player.videoQuestion.reelCount,
         }
       : null,
   });
@@ -463,11 +465,14 @@ io.on('connection', (socket) => {
     player.videos = picks;
 
     const source = pickRandom(picks);
+    const reelNumber = picks.findIndex((v) => v.id === source.id) + 1;
     player.videoQuestion = {
       videoId: source.id,
       question: source.question,
       options: source.options,
       correct: source.correct,
+      reelNumber,
+      reelCount: picks.length,
     };
     player.phase = 'watching';
 

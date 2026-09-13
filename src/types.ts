@@ -26,6 +26,8 @@ export interface VideoQuestion {
   videoId: string;
   question: string;
   options: string[];
+  reelNumber?: number;
+  reelCount?: number;
 }
 
 export interface PublicPlayer {
