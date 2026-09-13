@@ -12,6 +12,8 @@ import {
 import { MathDisplay } from "../../src/components/MathDisplay";
 import { VideoPlayer } from "../../src/components/VideoPlayer";
 import { installGazeBridge } from "../../src/gaze/gazeBridge";
+import { useAttentionDetector } from "../../src/gaze/useAttentionDetector";
+import { AttentionOverlay } from "../../src/gaze/AttentionOverlay";
 import { useGameClient } from "../../src/socket/useGameClient";
 import type { Difficulty, PlaylistVideo, PublicPlayer, RoomState, VideoQuestion } from "../../src/types";
 
@@ -200,6 +202,13 @@ function FeedScreen({
   const [dragDelta, setDragDelta] = useState(0);
   const dragging = useRef(false);
 
+  // === CV: attention detector ===
+  const [restartToken, setRestartToken] = useState(0);
+  const { state: gazeState } = useAttentionDetector({
+    enabled: true,
+  });
+  const isDistracted = gazeState === "distracted";
+
   const onTouchStart = (e: TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
     dragging.current = true;
@@ -257,8 +266,9 @@ function FeedScreen({
             <div className="absolute inset-0 rounded-[20px] overflow-hidden" style={{ background: colors.bg }}>
               {Math.abs(i - currentIdx) <= 1 ? (
                 <VideoPlayer
+                  key={`${video.id}-${i === currentIdx ? restartToken : 0}`}
                   youtubeId={video.youtubeId}
-                  active={i === currentIdx}
+                  active={i === currentIdx && !isDistracted}
                   onEnded={() => {
                     if (i === currentIdx) onEnded();
                   }}
@@ -278,6 +288,10 @@ function FeedScreen({
           </div>
         );
       })}
+      <AttentionOverlay
+        state={gazeState}
+        onReturn={() => setRestartToken((t) => t + 1)}
+      />
     </div>
   );
 }
