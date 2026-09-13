@@ -41,6 +41,7 @@ export function useGameClient() {
   const [videoQuestion, setVideoQuestion] = useState<VideoQuestion | null>(null);
   const [videoIndex, setVideoIndex] = useState(0);
   const [problemError, setProblemError] = useState(false);
+  const [timeUp, setTimeUp] = useState(false);
   const [joinError, setJoinError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
   const [connecting, setConnecting] = useState(false);
@@ -121,6 +122,7 @@ export function useGameClient() {
           setVideoQuestion(null);
           setVideoIndex(0);
           setProblemError(false);
+          setTimeUp(false);
         }
       });
 
@@ -204,6 +206,13 @@ export function useGameClient() {
     [playerId, roomCode],
   );
 
+  const timeoutProblem = useCallback(() => {
+    if (!roomCode) return;
+    setTimeUp(true);
+    socketRef.current?.emit('problem-timeout', { roomCode, playerId });
+    window.setTimeout(() => setTimeUp(false), 1500);
+  }, [playerId, roomCode]);
+
   const finishVideos = useCallback(() => {
     if (!roomCode) return;
     socketRef.current?.emit('videos-finished', { roomCode, playerId });
@@ -265,6 +274,7 @@ export function useGameClient() {
     videoQuestion,
     videoIndex,
     problemError,
+    timeUp,
     joinError,
     connected,
     connecting,
@@ -274,6 +284,7 @@ export function useGameClient() {
     setDifficulty,
     setReady,
     submitProblemAnswer,
+    timeoutProblem,
     onVideoEnded,
     setWatchIndex,
     submitVideoAnswer,
