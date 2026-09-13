@@ -1,6 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { VideoPlayer } from '../components/VideoPlayer';
 import type { PlaylistVideo, PublicPlayer } from '../types';
+import { useAttentionDetector } from '../gaze/useAttentionDetector';
+import { AttentionOverlay } from '../gaze/AttentionOverlay';
 
 interface VideoPlayerScreenProps {
   me: PublicPlayer;
@@ -20,6 +22,15 @@ export function VideoPlayerScreen({
   const feedRef = useRef<HTMLDivElement>(null);
   const slidingRef = useRef(false);
   const total = videos.length || me.videoCount;
+
+  const [restartToken, setRestartToken] = useState(0);
+  const { state: gazeState } = useAttentionDetector({
+    enabled: true,
+    onDistracted: () => {
+      /* video pauses via active prop; restart on user click */
+    },
+  });
+  const isDistracted = gazeState === 'distracted';
 
   useEffect(() => {
     const node = feedRef.current?.querySelector<HTMLElement>(`[data-slide="${videoIndex}"]`);
@@ -76,8 +87,9 @@ export function VideoPlayerScreen({
           <section key={video.id} className="shorts-slide" data-slide={index}>
             {Math.abs(index - videoIndex) <= 1 ? (
               <VideoPlayer
+                key={`${video.id}-${index === videoIndex ? restartToken : 0}`}
                 youtubeId={video.youtubeId}
-                active={index === videoIndex}
+                active={index === videoIndex && !isDistracted}
                 onEnded={() => {
                   if (index === videoIndex) onEnded();
                 }}
@@ -90,6 +102,11 @@ export function VideoPlayerScreen({
           </section>
         ))}
       </div>
+
+      <AttentionOverlay
+        state={gazeState}
+        onReturn={() => setRestartToken((t) => t + 1)}
+      />
     </div>
   );
 }
