@@ -14,6 +14,7 @@ const {
   SECOND_SOLVER_POINTS,
   SERVER_PORT,
   ROUND_TRANSITION_MS,
+  PROBLEM_TIME_LIMIT_MS,
 } = JSON.parse(readFileSync(join(__dirname, 'shared/constants.json'), 'utf8'));
 
 const problemBank = JSON.parse(
@@ -168,6 +169,8 @@ function createRoom(roomCode) {
     roundHistory: {},
     gazes: {},
     transitionTimer: null,
+    solveTimer: null,
+    solveDeadlineAt: null,
   };
 }
 
@@ -209,6 +212,8 @@ function publicRoomState(room) {
       second: SECOND_SOLVER_POINTS,
     },
     winnerSlot: winnerSlot(room),
+    solveDeadlineAt: room.solveDeadlineAt,
+    problemTimeLimitMs: PROBLEM_TIME_LIMIT_MS,
   };
 }
 
@@ -258,10 +263,33 @@ function bothRoundComplete(room) {
   return list.length === 2 && list.every((p) => p.phase === 'round_complete');
 }
 
+function failUnsolvedPlayers(room) {
+  let changed = false;
+  for (const player of Object.values(room.players)) {
+    if (player.phase !== 'solving') continue;
+    player.solveRank = null;
+    player.videos = [];
+    player.videoQuestion = null;
+    player.roundPoints = 0;
+    player.videoCorrect = null;
+    player.phase = 'round_complete';
+    recordRound(room, player);
+    changed = true;
+  }
+  if (changed) {
+    emitRoomUpdate(room);
+    maybeAdvanceRound(room);
+  }
+}
+
 function startRound(room) {
   if (room.transitionTimer) {
     clearTimeout(room.transitionTimer);
     room.transitionTimer = null;
+  }
+  if (room.solveTimer) {
+    clearTimeout(room.solveTimer);
+    room.solveTimer = null;
   }
 
   const problem = pickProblem(room.usedProblemIds, room.difficulty);
@@ -273,6 +301,7 @@ function startRound(room) {
   room.round += 1;
   room.currentProblem = problem;
   room.solvedOrder = [];
+  room.solveDeadlineAt = Date.now() + PROBLEM_TIME_LIMIT_MS;
 
   for (const player of Object.values(room.players)) {
     player.phase = 'solving';
@@ -285,6 +314,12 @@ function startRound(room) {
   }
 
   emitRoomUpdate(room);
+
+  room.solveTimer = setTimeout(() => {
+    room.solveTimer = null;
+    if (!rooms.has(room.roomCode) || room.phase !== 'playing') return;
+    failUnsolvedPlayers(room);
+  }, PROBLEM_TIME_LIMIT_MS);
 }
 
 function maybeAdvanceRound(room) {
@@ -408,6 +443,7 @@ io.on('connection', (socket) => {
     const player = room.players[playerId];
     if (!player || player.socketId !== socket.id) return;
     if (player.phase !== 'solving') return;
+    if (room.solveDeadlineAt && Date.now() > room.solveDeadlineAt) return;
 
     if (!problemAnswerMatches(room.currentProblem, answer ?? '')) {
       socket.emit('problem-incorrect');
@@ -479,6 +515,11 @@ io.on('connection', (socket) => {
       clearTimeout(room.transitionTimer);
       room.transitionTimer = null;
     }
+    if (room.solveTimer) {
+      clearTimeout(room.solveTimer);
+      room.solveTimer = null;
+    }
+    room.solveDeadlineAt = null;
     room.phase = 'lobby';
     room.round = 0;
     room.currentProblem = null;
@@ -532,6 +573,7 @@ io.on('connection', (socket) => {
     const anyoneConnected = getPlayerList(room).some((p) => p.connected);
     if (!anyoneConnected) {
       if (room.transitionTimer) clearTimeout(room.transitionTimer);
+      if (room.solveTimer) clearTimeout(room.solveTimer);
       rooms.delete(room.roomCode);
     }
   });

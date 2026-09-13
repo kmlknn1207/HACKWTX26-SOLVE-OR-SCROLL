@@ -6,7 +6,7 @@ export const SECOND_SOLVER_VIDEO_COUNT = constants.SECOND_SOLVER_VIDEO_COUNT;
 export const FIRST_SOLVER_POINTS = constants.FIRST_SOLVER_POINTS;
 export const SECOND_SOLVER_POINTS = constants.SECOND_SOLVER_POINTS;
 export const SERVER_PORT = constants.SERVER_PORT;
-export const ROUND_TRANSITION_MS = constants.ROUND_TRANSITION_MS;
+export const PROBLEM_TIME_LIMIT_MS = constants.PROBLEM_TIME_LIMIT_MS;
 
 function inferServerUrl(): string {
   if (import.meta.env.VITE_SERVER_URL) return import.meta.env.VITE_SERVER_URL;

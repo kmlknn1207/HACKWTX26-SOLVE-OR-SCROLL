@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { MathDisplay } from '../components/MathDisplay';
+import { useCountdown } from '../hooks/useCountdown';
 import type { PublicPlayer, RoomState } from '../types';
 
 interface ProblemScreenProps {
@@ -12,9 +13,12 @@ interface ProblemScreenProps {
 export function ProblemScreen({ room, me, problemError, onSubmit }: ProblemScreenProps) {
   const [answer, setAnswer] = useState('');
   const problem = room.problem;
+  const secondsLeft = useCountdown(room.solveDeadlineAt);
+  const expired = room.solveDeadlineAt != null && secondsLeft <= 0;
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
+    if (expired) return;
     onSubmit(answer);
   };
 
@@ -22,6 +26,9 @@ export function ProblemScreen({ room, me, problemError, onSubmit }: ProblemScree
     <main className="screen">
       <p>
         Round {room.round} / {room.totalRounds} · Player {me.slot} · {room.difficulty}
+      </p>
+      <p className="timer" style={{ color: secondsLeft <= 10 ? '#a00' : undefined }}>
+        {secondsLeft}s
       </p>
       <h1>Solve</h1>
       {problem ? (
@@ -43,9 +50,13 @@ export function ProblemScreen({ room, me, problemError, onSubmit }: ProblemScree
           placeholder="Numeric answer"
           inputMode="decimal"
           autoComplete="off"
+          disabled={expired}
         />
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={expired}>
+          Submit
+        </button>
       </form>
+      {expired && <p className="error">Time’s up — 0 points this round.</p>}
       {problemError && <p className="error">Incorrect — try again. Solve order is not used yet.</p>}
       <p className="meta">
         Score {room.scores[me.playerId] ?? 0}
