@@ -64,6 +64,7 @@ export function App() {
         videos={game.playlist}
         videoIndex={game.videoIndex}
         onEnded={game.onVideoEnded}
+        onActiveChange={game.setWatchIndex}
       />
     );
   }

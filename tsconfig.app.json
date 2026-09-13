@@ -20,5 +20,5 @@
     "noUncheckedSideEffectImports": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "data", "shared"]
+  "include": ["src", "data", "shared", "UI/src"]
 }

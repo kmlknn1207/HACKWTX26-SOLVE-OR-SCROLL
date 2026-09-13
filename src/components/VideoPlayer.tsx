@@ -27,13 +27,28 @@ function loadYoutubeApi(): Promise<void> {
 
 interface VideoPlayerProps {
   youtubeId: string;
+  active: boolean;
   onEnded: () => void;
 }
 
-export function VideoPlayer({ youtubeId, onEnded }: VideoPlayerProps) {
+export function VideoPlayer({ youtubeId, active, onEnded }: VideoPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const onEndedRef = useRef(onEnded);
+  const activeRef = useRef(active);
+  const playerRef = useRef<YT.Player | null>(null);
   onEndedRef.current = onEnded;
+  activeRef.current = active;
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
+    try {
+      if (active) player.playVideo();
+      else player.pauseVideo();
+    } catch {
+      /* player may not be ready */
+    }
+  }, [active]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -42,7 +57,6 @@ export function VideoPlayer({ youtubeId, onEnded }: VideoPlayerProps) {
     const host = document.createElement('div');
     container.appendChild(host);
 
-    let player: YT.Player | null = null;
     let cancelled = false;
     let finished = false;
     let pollId = 0;
@@ -58,12 +72,12 @@ export function VideoPlayer({ youtubeId, onEnded }: VideoPlayerProps) {
     loadYoutubeApi().then(() => {
       if (cancelled || !window.YT?.Player) return;
 
-      player = new window.YT.Player(host, {
+      const player = new window.YT.Player(host, {
         videoId: youtubeId,
         width: '100%',
         height: '100%',
         playerVars: {
-          autoplay: 1,
+          autoplay: activeRef.current ? 1 : 0,
           controls: 0,
           disablekb: 1,
           fs: 0,
@@ -84,19 +98,20 @@ export function VideoPlayer({ youtubeId, onEnded }: VideoPlayerProps) {
             } catch {
               /* iframe may not exist yet */
             }
-            event.target.playVideo();
+            if (activeRef.current) event.target.playVideo();
+            else event.target.pauseVideo();
+
             pollId = window.setInterval(() => {
-              if (cancelled || finished || !player) return;
+              if (cancelled || finished || !playerRef.current || !activeRef.current) return;
               let time = 0;
               let duration = 0;
               try {
-                time = player.getCurrentTime() ?? 0;
-                duration = player.getDuration() ?? 0;
+                time = playerRef.current.getCurrentTime() ?? 0;
+                duration = playerRef.current.getDuration() ?? 0;
               } catch {
                 return;
               }
 
-              // Shorts often loop instead of firing ENDED.
               if (lastTime > 1.25 && time < 0.45) {
                 finish();
                 return;
@@ -111,22 +126,23 @@ export function VideoPlayer({ youtubeId, onEnded }: VideoPlayerProps) {
             }, 200);
           },
           onStateChange: (event) => {
-            if (cancelled) return;
+            if (cancelled || !activeRef.current) return;
             const ended = window.YT?.PlayerState?.ENDED ?? 0;
             if (event.data === ended) finish();
           },
           onError: () => {
-            // Private, deleted, or embedding-disabled clips should not stall the round.
-            finish();
+            if (activeRef.current) finish();
           },
         },
       });
+      playerRef.current = player;
     });
 
     return () => {
       cancelled = true;
       window.clearInterval(pollId);
-      player?.destroy();
+      playerRef.current?.destroy();
+      playerRef.current = null;
       host.remove();
     };
   }, [youtubeId]);

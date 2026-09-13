@@ -1,8 +1,9 @@
 .screen,
 .results {
-  max-width: 720px;
-  margin: 2rem auto;
-  padding: 1rem;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 1.5rem 1.1rem 2rem;
+  min-height: 100%;
 }
 
 .prompt {
@@ -13,15 +14,20 @@
   margin: 1rem 0;
   font-size: 1.35rem;
   overflow-x: auto;
+  color: #fff;
+}
+
+.math-display .katex {
+  color: #fff;
 }
 
 .meta,
 .error {
-  color: #444;
+  color: #a1a1aa;
 }
 
 .error {
-  color: #a00;
+  color: #fb7185;
 }
 
 label {
@@ -33,7 +39,7 @@ input,
 button,
 select {
   font: inherit;
-  margin: 0.25rem 0.25rem 0.25rem 0;
+  margin: 0.25rem 0;
 }
 
 input,
@@ -41,7 +47,11 @@ select {
   display: block;
   width: 100%;
   max-width: 28rem;
-  padding: 0.4rem 0.5rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  background: #111114;
+  color: #fff;
 }
 
 .options {
@@ -55,14 +65,20 @@ select {
   width: 100%;
   max-width: 28rem;
   text-align: left;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border: 0;
+  border-radius: 14px;
+  background: #18181b;
+  color: #fff;
+}
+
+.screen button:disabled {
+  opacity: 0.5;
 }
 
 .video-player {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 9 / 16;
-  max-height: 70vh;
+  position: absolute;
+  inset: 0;
   background: #000;
 }
 
@@ -70,6 +86,7 @@ select {
 .video-player-host iframe {
   width: 100%;
   height: 100%;
+  border: 0;
 }
 
 .results-grid {
@@ -80,4 +97,87 @@ select {
 
 .round-breakdown {
   padding-left: 1.25rem;
+}
+
+.shorts-root {
+  position: relative;
+  height: 100dvh;
+  background: #000;
+  overflow: hidden;
+}
+
+.shorts-hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  font-size: 0.85rem;
+  pointer-events: none;
+  text-shadow: 0 1px 8px #000;
+}
+
+.shorts-pips {
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.shorts-pips span {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 35%);
+}
+
+.shorts-pips span.is-active {
+  height: 18px;
+  background: #fff;
+}
+
+.shorts-feed {
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+}
+
+.shorts-slide {
+  position: relative;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  background: #000;
+}
+
+.shorts-scroll-catcher {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.shorts-hint {
+  position: absolute;
+  bottom: 1.4rem;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  margin: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 80%);
+  pointer-events: none;
+  text-shadow: 0 1px 8px #000;
 }

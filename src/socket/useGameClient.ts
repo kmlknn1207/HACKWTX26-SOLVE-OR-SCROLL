@@ -221,6 +221,10 @@ export function useGameClient() {
     });
   }, [finishVideos, playlist.length]);
 
+  const setWatchIndex = useCallback((index: number) => {
+    setVideoIndex(index);
+  }, []);
+
   const submitVideoAnswer = useCallback(
     (answer: string) => {
       if (!roomCode || !videoQuestion) return;
@@ -271,6 +275,7 @@ export function useGameClient() {
     setReady,
     submitProblemAnswer,
     onVideoEnded,
+    setWatchIndex,
     submitVideoAnswer,
     playAgain,
     reportGazeStatus,

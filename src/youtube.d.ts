@@ -54,6 +54,7 @@ declare global {
     class Player {
       constructor(element: string | HTMLElement, options: PlayerOptions);
       playVideo(): void;
+      pauseVideo(): void;
       destroy(): void;
       getCurrentTime(): number;
       getDuration(): number;

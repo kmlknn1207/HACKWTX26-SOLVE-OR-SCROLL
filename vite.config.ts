@@ -1,15 +1,21 @@
+import path from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'UI/src'),
+    },
+  },
   server: {
     host: true,
     port: 5173,
     strictPort: true,
     allowedHosts: true,
     cors: true,
-    // HMR websockets target localhost and break remote laptops.
     hmr: false,
     proxy: {
       '/socket.io': {
