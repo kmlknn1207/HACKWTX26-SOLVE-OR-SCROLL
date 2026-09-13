@@ -150,6 +150,8 @@ function emptyPlayer(playerId, slot) {
     videoQuestion: null,
     roundPoints: 0,
     videoCorrect: null,
+    timedOut: false,
+    solveTime: null,
   };
 }
 
@@ -282,6 +284,8 @@ function startRound(room) {
     player.videoQuestion = null;
     player.roundPoints = 0;
     player.videoCorrect = null;
+    player.timedOut = false;
+    player.solveTime = null;
   }
 
   emitRoomUpdate(room);
@@ -420,6 +424,7 @@ io.on('connection', (socket) => {
     room.solvedOrder.push(playerId);
     const rank = room.solvedOrder.length;
     player.solveRank = rank;
+    player.solveTime = Date.now();
 
     const count = rank === 1 ? FIRST_SOLVER_VIDEO_COUNT : SECOND_SOLVER_VIDEO_COUNT;
     const { picks, usedIds } = pickVideos(room.usedVideoIds, count);
@@ -427,6 +432,34 @@ io.on('connection', (socket) => {
     player.videos = picks;
 
     const source = pickRandom(picks);
+    player.videoQuestion = {
+      videoId: source.id,
+      question: source.question,
+      options: source.options,
+      correct: source.correct,
+    };
+    player.phase = 'watching';
+
+    emitPrivatePlaylist(socket, player);
+    emitRoomUpdate(room);
+  });
+
+  socket.on('problem-timeout', ({ roomCode, playerId } = {}) => {
+    const room = rooms.get(String(roomCode ?? '').toUpperCase());
+    if (!room || room.phase !== 'playing' || !room.currentProblem) return;
+    const player = room.players[playerId];
+    if (!player || player.socketId !== socket.id || player.phase !== 'solving') return;
+
+    const timeoutAt = Date.now();
+    player.timedOut = true;
+    player.solveTime = timeoutAt;
+    if (!room.solvedOrder.includes(playerId)) room.solvedOrder.push(playerId);
+    player.solveRank = room.solvedOrder.indexOf(playerId) + 1;
+
+    const { picks, usedIds } = pickVideos(room.usedVideoIds, SECOND_SOLVER_VIDEO_COUNT);
+    room.usedVideoIds = usedIds;
+    const source = pickRandom(picks);
+    player.videos = picks;
     player.videoQuestion = {
       videoId: source.id,
       question: source.question,
@@ -452,7 +485,7 @@ io.on('connection', (socket) => {
     player.videoCorrect = correct;
     const pot =
       player.solveRank === 1 ? FIRST_SOLVER_POINTS : SECOND_SOLVER_POINTS;
-    player.roundPoints = correct ? pot : 0;
+    player.roundPoints = player.timedOut ? -10 : correct ? pot : 0;
     room.scores[playerId] = (room.scores[playerId] ?? 0) + player.roundPoints;
     player.phase = 'round_complete';
     recordRound(room, player);

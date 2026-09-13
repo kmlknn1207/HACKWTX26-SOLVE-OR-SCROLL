@@ -15,7 +15,7 @@ html, body, #root {
 }
 
 body {
-  background: #d9d7d2;
+  background: #274c43;
   font-family: 'DM Sans', sans-serif;
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
@@ -24,9 +24,273 @@ body {
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
+.difficulty-control {
+  color: #f2e8d5;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.difficulty-select {
+  appearance: none;
+  background: #f2e8d5;
+  border: 2px solid #d98878;
+  color: #274c43;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  outline: none;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.difficulty-select:focus {
+  box-shadow: 0 0 0 3px rgba(217, 136, 120, .35);
+  transform: translateY(-1px);
+}
+
+.difficulty-select:disabled {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+.problem-answer-area {
+  position: relative;
+}
+
+.answer-row {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.answer-input {
+  min-width: 0;
+  flex: 1;
+}
+
+.answer-timer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 92px;
+  padding: 6px 9px;
+  border: 2px solid #d98878;
+  border-radius: 12px;
+  background: #f2e8d5;
+  color: #274c43;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.hourglass {
+  display: inline-block;
+  font-size: 1.35rem;
+  line-height: 1;
+  animation: hourglass-flip 2s steps(2, end) infinite;
+}
+
+.answer-timer small,
+.answer-timer strong {
+  display: block;
+  line-height: 1;
+}
+
+.answer-timer small {
+  font-size: .52rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.answer-timer strong {
+  margin-top: 4px;
+  font-size: .95rem;
+}
+
+@keyframes hourglass-flip {
+  0%, 45% { transform: rotate(0deg); }
+  50%, 95% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hourglass { animation: none; }
+}
+
+.wrong-answer-bubble {
+  position: absolute;
+  z-index: 2;
+  top: -14px;
+  left: 50%;
+  padding: 10px 18px;
+  border: 2px solid #d98878;
+  border-radius: 999px;
+  background: #f2e8d5;
+  color: #274c43;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .86rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  animation: wrong-bubble-in .2s ease-out both;
+}
+
+.wrong-answer-bubble::after {
+  position: absolute;
+  right: 24px;
+  bottom: -7px;
+  width: 11px;
+  height: 11px;
+  border-right: 2px solid #d98878;
+  border-bottom: 2px solid #d98878;
+  background: #f2e8d5;
+  content: '';
+  transform: rotate(45deg);
+}
+
+@keyframes wrong-bubble-in {
+  from { opacity: 0; transform: translate(-50%, -85%) scale(.92); }
+  to { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+}
+
+.time-up-panel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 32px;
+  color: #f2e8d5;
+  text-align: center;
+  animation: pop-in .35s ease-out both;
+}
+
+.time-up-hourglass {
+  font-size: 4rem;
+  animation: hourglass-flip 2s steps(2, end) infinite;
+}
+
+.time-up-panel h2 {
+  margin: 0;
+  color: #d98878;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 2.7rem;
+}
+
+.time-up-panel p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.time-up-panel small {
+  margin-top: 8px;
+  opacity: .7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .time-up-hourglass { animation: none; }
+}
+
 @keyframes slide-up   { from { transform:translateY(100%); opacity:0 } to { transform:translateY(0); opacity:1 } }
 @keyframes pop-in     { 0%{transform:scale(.6);opacity:0} 70%{transform:scale(1.08)} 100%{transform:scale(1);opacity:1} }
 @keyframes pulse-soft { 0%,100%{opacity:1} 50%{opacity:.45} }
+@keyframes waiting-dot-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-7px); }
+}
+
+.waiting-dots {
+  display: inline-flex;
+  gap: .12em;
+  margin-left: .12em;
+  vertical-align: .04em;
+}
+
+.waiting-dots i {
+  width: .18em;
+  height: .18em;
+  border-radius: 50%;
+  background: currentColor;
+  animation: waiting-dot-bounce 1.2s ease-in-out infinite;
+}
+
+.waiting-dots i:nth-child(2) { animation-delay: .15s; }
+.waiting-dots i:nth-child(3) { animation-delay: .3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .waiting-dots i { animation: none; }
+}
+
+@keyframes title-bounce {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(-5px); }
+  70% { transform: translateY(0) scaleY(.97); }
+}
+
+@keyframes doodle-loop {
+  0%, 12% { stroke-dashoffset: 180; opacity: .35; }
+  48% { stroke-dashoffset: 0; opacity: 1; }
+  62% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 180; opacity: .35; }
+}
+
+.side-doodles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f2e8d5;
+}
+
+.side-doodles svg {
+  width: 52px;
+  height: 236px;
+  overflow: visible;
+}
+
+.doodle-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
+  stroke-dasharray: 180;
+  stroke-dashoffset: 180;
+  animation: doodle-loop 11s cubic-bezier(.65, 0, .35, 1) infinite;
+}
+
+.doodle-star { animation-delay: 0s; }
+.doodle-spiral { animation-delay: 1.1s; }
+.doodle-bolt { animation-delay: 2.2s; }
+.doodle-spark { stroke-width: 2.2; animation-delay: 3.3s; }
+
+.side-doodles-right {
+  color: #d98878;
+}
+
+.doodle-circle { animation-delay: 2.4s; }
+.doodle-wave { animation-delay: 3.5s; }
+.doodle-arrow { animation-delay: 4.6s; }
+.doodle-sun { stroke-width: 2.2; animation-delay: 5.7s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .doodle-line { animation: none; stroke-dashoffset: 0; opacity: 1; }
+}
+
+.game-title {
+  margin: 0;
+  color: #111;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: clamp(1.75rem, 8vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  animation: title-bounce 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-title { animation: none; }
+}
 .math-display .katex { color: #fff; }
 
 .video-player {
