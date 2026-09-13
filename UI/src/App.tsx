@@ -61,7 +61,7 @@ function LeftStrip({
 }) {
   return (
     <div
-      className="flex flex-col items-center justify-center py-5 gap-4 flex-shrink-0 h-full"
+      className="decorative-strip flex flex-col items-center justify-center py-5 gap-4 flex-shrink-0 h-full"
       style={{ width: 52, background: "#274c43" }}
     >
       <div className="side-doodles" aria-hidden="true">
@@ -79,7 +79,7 @@ function LeftStrip({
 function RightStrip() {
   return (
     <div
-      className="flex flex-col items-center justify-center py-5 gap-4 flex-shrink-0 h-full"
+      className="decorative-strip flex flex-col items-center justify-center py-5 gap-4 flex-shrink-0 h-full"
       style={{ width: 52, background: "#274c43" }}
     >
       <div className="side-doodles side-doodles-right" aria-hidden="true">
@@ -226,7 +226,7 @@ function FeedScreen({
 
   return (
     <div
-      className="flex-1 relative overflow-hidden"
+      className="feed-panel flex-1 relative overflow-hidden"
       style={{ minHeight: 0 }}
       onWheel={onWheel}
       onTouchStart={onTouchStart}
@@ -318,14 +318,14 @@ function HomePanel({
   };
 
   return (
-    <div className="flex-1 flex flex-col gap-5 px-5 py-6 overflow-y-auto hide-scrollbar">
+    <div className="home-panel game-panel flex-1 flex flex-col gap-5 px-5 py-6 overflow-y-auto">
       <div>
         <p className="font-mono text-xs tracking-widest" style={{ color: "rgba(0,0,0,0.38)" }}>
           HEAD TO HEAD
         </p>
         <h2 className="game-title">Scroll or Solve</h2>
         <p className="text-sm mt-2 text-center" style={{ color: "#f2e8d5" }}>
-          Compete to test your concentration. Same integral. Faster solver gets 5 shorts. Slower solver only gets 3. Get the prompt rigth and earn points
+          Compete to test your concentration. Same integral. Faster solver gets 5 shorts. Slower solver only gets 3. Get the prompt right and earn points.
         </p>
       </div>
       <label className="text-xs font-mono" style={{ color: "#f2e8d5" }}>
@@ -384,7 +384,7 @@ function WaitingPanel({
 }) {
   const opponent = room.players.find((p) => p.playerId !== me.playerId);
   return (
-    <div className="flex-1 flex flex-col gap-6 px-6 py-6">
+    <div className="game-panel flex-1 flex flex-col gap-6 px-6 py-6 overflow-y-auto">
       <div className="text-center">
         <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 34, color: "#111", lineHeight: 1.05 }}>
           {opponent ? "Opponent found" : (
@@ -475,7 +475,7 @@ function ProblemPanel({
   };
 
   return (
-    <div className="flex-1 flex flex-col gap-4 px-5 py-4 overflow-y-auto hide-scrollbar">
+    <div className="problem-panel game-panel flex-1 flex flex-col gap-4 px-5 py-4 overflow-y-auto">
       <div className="flex items-center justify-between">
         <p className="font-mono text-xs" style={{ color: "rgba(0,0,0,0.38)", letterSpacing: "0.08em" }}>
           ROUND {room.round} / {room.totalRounds}
@@ -546,7 +546,7 @@ function QuestionPanel({ question, onSubmit }: { question: VideoQuestion | null;
     return <div className="flex-1 flex items-center justify-center font-mono text-sm">Loading question…</div>;
   }
   return (
-    <div className="flex-1 flex flex-col gap-4 px-5 py-4 overflow-y-auto hide-scrollbar">
+    <div className="question-panel game-panel flex-1 flex flex-col gap-4 px-5 py-4 overflow-y-auto">
       <div className="rounded-2xl p-5" style={{ background: "#111" }}>
         <p className="font-mono text-xs mb-3" style={{ color: "rgba(255,255,255,0.3)" }}>
           {question.reelNumber && question.reelCount
@@ -557,7 +557,7 @@ function QuestionPanel({ question, onSubmit }: { question: VideoQuestion | null;
           {question.question}
         </p>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="question-options flex flex-col gap-2">
         {question.options.map((opt) => (
           <button
             key={opt}
@@ -588,7 +588,7 @@ function ResultPanel({
   onAction?: () => void;
 }) {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center gap-7 px-8" style={{ animation: "pop-in 0.45s cubic-bezier(.4,0,.2,1)" }}>
+    <div className="result-panel game-panel flex-1 flex flex-col items-center justify-center gap-7 px-8" style={{ animation: "pop-in 0.45s cubic-bezier(.4,0,.2,1)" }}>
       <div
         className="flex items-center justify-center text-5xl rounded-2xl"
         style={{ width: 96, height: 96, background: "#f2e8d5", border: "2px solid #111" }}
@@ -725,16 +725,28 @@ export default function App() {
   }
 
   return (
-    <div
-      className="flex overflow-hidden"
-      style={{ width: "100%", height: "100dvh", background: "#274c43", maxWidth: 440, margin: "0 auto" }}
-    >
+    <div className="app-shell">
       <LeftStrip />
-      <div className="flex-1 flex flex-col overflow-hidden" style={{ minWidth: 0 }}>
+      <aside className="game-sidebar" aria-label="Game overview">
+        <div className="desktop-intro">
+          <p className="font-mono text-xs tracking-widest">HEAD TO HEAD</p>
+          <h1>Scroll<br />or Solve</h1>
+          <p>Solve the integral. Earn your scroll. Show what you remember.</p>
+        </div>
         <ScoreBar room={room} me={me} />
+        <div className="desktop-intro game-guide">
+          <p className="font-mono text-xs tracking-widest">HOW TO PLAY</p>
+          <ol>
+            <li>Solve the same integral against the clock.</li>
+            <li>Watch your shorts and pay attention.</li>
+            <li>Answer the video questions to earn points.</li>
+          </ol>
+        </div>
+      </aside>
+      <main className="game-content">
         {main}
         <BottomNav accent={accent} />
-      </div>
+      </main>
       <RightStrip />
     </div>
   );

@@ -252,3 +252,101 @@ body {
   height: 100%;
   border: 0;
 }
+
+/* A compact phone column expands into a game workspace on laptops. */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 640px;
+  height: 100dvh;
+  margin: 0 auto;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow: hidden;
+}
+
+.app-shell > .decorative-strip { display: none; }
+.game-sidebar { flex-shrink: 0; }
+.desktop-intro { display: none; }
+.game-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.game-panel { min-height: 0; min-width: 0; }
+.game-panel > * { flex-shrink: 0; min-width: 0; }
+.game-panel input, .game-panel select { font-size: 16px; }
+.game-title { white-space: normal; }
+.math-display { max-width: 100%; overflow-x: auto; }
+.result-panel { overflow-y: auto; padding-block: 24px; justify-content: safe center; }
+button:not(:disabled) { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid #d98878;
+  outline-offset: 3px;
+}
+
+@media (min-width: 900px) {
+  .app-shell {
+    display: grid;
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 64px);
+    max-width: 1440px;
+    padding: clamp(24px, 4vw, 56px);
+  }
+  .game-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .desktop-intro { display: block; color: #f2e8d5; }
+  .desktop-intro h1 {
+    margin: 18px 0;
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(44px, 4.5vw, 64px);
+    line-height: 1;
+  }
+  .desktop-intro > p:last-child { line-height: 1.65; }
+  .game-sidebar > .flex-shrink-0 { padding: 0; }
+  .game-guide { margin-top: auto; }
+  .game-guide ol { list-style: decimal; padding-left: 20px; margin-top: 16px; }
+  .game-guide li { margin-top: 12px; line-height: 1.6; }
+  .game-content {
+    border: 1px solid rgb(242 232 213 / 20%);
+    border-radius: 28px;
+    background: rgb(255 255 255 / 4%);
+    padding: 16px;
+  }
+  .game-panel { padding: clamp(20px, 3vw, 40px); }
+  .home-panel { justify-content: safe center; }
+  .home-panel .game-title { font-size: clamp(36px, 3.5vw, 52px); }
+  .home-panel > div:first-child { margin-bottom: 12px; }
+  .home-panel > div:first-child > p:last-child { max-width: 46ch; margin-inline: auto; }
+  .question-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .problem-panel .math-display { font-size: 1.5rem; }
+  .result-panel > * { max-width: 520px; }
+  .feed-panel { width: min(100%, 440px); align-self: center; }
+  .game-content > .flex-shrink-0 { width: min(100%, 480px); align-self: center; }
+}
+
+@media (min-width: 1200px) {
+  .home-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-content: center;
+    column-gap: 32px;
+  }
+  .home-panel > div:first-child { grid-column: 1; grid-row: 1 / span 3; align-self: center; }
+  .home-panel > label, .home-panel > button, .home-panel > form, .home-panel > p { grid-column: 2; }
+}
+
+@media (max-height: 600px) {
+  .game-content > .flex-shrink-0 { padding-block: 4px; }
+  .game-content nav { height: 44px !important; }
+  .game-guide { display: none; }
+}
