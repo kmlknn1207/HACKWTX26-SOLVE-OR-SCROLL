@@ -1,0 +1,10 @@
+{
+  "description": "Scroll through videos in a circular feed and compete in trivia games to earn more scrolls, blending entertainment with interactive challenges.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
