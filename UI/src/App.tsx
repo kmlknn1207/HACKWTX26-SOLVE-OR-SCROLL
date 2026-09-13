@@ -312,63 +312,31 @@ function HomePanel({
   onJoin: (code: string) => void;
 }) {
   const [code, setCode] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const practice = useRef<HTMLDialogElement>(null);
   const submitJoin = (event: FormEvent) => {
     event.preventDefault();
-    onJoin(code);
+    if (!connecting && code.trim()) onJoin(code.trim());
   };
-
   return (
-    <div className="home-panel game-panel flex-1 flex flex-col gap-5 px-5 py-6 overflow-y-auto">
-      <div>
-        <p className="font-mono text-xs tracking-widest" style={{ color: "rgba(0,0,0,0.38)" }}>
-          HEAD TO HEAD
-        </p>
-        <h2 className="game-title">Scroll or Solve</h2>
-        <p className="text-sm mt-2 text-center" style={{ color: "#f2e8d5" }}>
-          Compete to test your concentration. Same integral. Faster solver gets 5 shorts. Slower solver only gets 3. Get the prompt right and earn points.
-        </p>
-      </div>
-      <label className="text-xs font-mono" style={{ color: "#f2e8d5" }}>
-        Server URL:
-        <input
-          className="mt-1 w-full rounded-xl px-3 py-3 text-sm"
-          style={{ background: "#fff", border: "1.5px solid rgba(0,0,0,0.1)", color: "#111" }}
-          value={serverUrl}
-          onChange={(e) => onServerUrlChange(e.target.value)}
-        />
-      </label>
-      <button
-        type="button"
-        onClick={onCreate}
-        disabled={connecting}
-        className="w-full py-4 rounded-2xl font-bold text-lg active:scale-95"
-        style={{ background: "#111", color: "#f2e8d5", fontFamily: "'DM Serif Display', serif" }}
-      >
-        Create Room
-      </button>
-      <form onSubmit={submitJoin} className="flex flex-col gap-3">
-        <input
-          className="w-full rounded-xl px-3 py-3 text-sm uppercase tracking-widest"
-          style={{ background: "#fff", border: "1.5px solid rgba(0,0,0,0.1)", color: "#111" }}
-          value={code}
-          onChange={(e) => setCode(e.target.value.toUpperCase())}
-          placeholder="ROOM CODE"
-        />
-        <button
-          type="submit"
-          disabled={connecting}
-          className="w-full py-4 rounded-2xl font-bold text-lg active:scale-95"
-          style={{ background: "#d98878", color: "#000", fontFamily: "'DM Serif Display', serif" }}
-        >
-          Join Room
-        </button>
-      </form>
-      {connecting && <p className="font-mono text-sm">Connecting…</p>}
-      {joinError && <p className="text-sm" style={{ color: "#CC2200" }}>{joinError}</p>}
+    <div className="lobby">
+      <header className="lobby-top"><div className="logo">SCROLL<br />OR SOLVE↗</div>
+        <details className="connection-settings"><summary className="settings-toggle">⚙ SETTINGS</summary><div className="settings-panel"><label>Server URL<input value={serverUrl} onChange={(e) => onServerUrlChange(e.target.value)} disabled={connecting} /></label></div></details>
+      </header>
+      <main className="arena">
+        <div className="mode"><span className="live-dot" />1V1 BRAIN BATTLE <span className="mode-detail">/ 5 ROUNDS</span></div>
+        <h1 className="arena-title">READY TO<br /><span>SHOW OFF?</span></h1>
+        <div className="matchup" aria-label="Player lobby"><div className="player you"><div className="avatar" aria-hidden="true">⌐■_■</div><div className="nameplate">YOU <span>READY</span></div></div><div className="versus" aria-hidden="true">VS</div><div className="player rival"><div className="avatar" aria-hidden="true">?</div><div className="nameplate">OPPONENT <span>OPEN SLOT</span></div></div></div>
+        <div className="lobby-actions"><button className="play-button" onClick={onCreate} disabled={connecting}>CREATE ROOM <span>↗</span></button><form className="join-inline" onSubmit={submitJoin}><label className="sr-only" htmlFor="room-code">Room code</label><input id="room-code" value={code} onChange={(e) => setCode(e.target.value.toUpperCase())} placeholder="ROOM CODE" autoComplete="off" required disabled={connecting} /><button type="submit" disabled={connecting || !code.trim()}>JOIN →</button></form>{connecting && <p className="lobby-notice" role="status">Connecting…</p>}{joinError && <p className="lobby-notice" role="alert">{joinError}</p>}</div>
+        <button className="practice-link" onClick={() => { setAnswer(""); setFeedback(""); practice.current?.showModal(); }}>✦ PRACTICE FIRST ↗</button>
+        <div className="arena-doodle d1" aria-hidden="true">∫</div><div className="arena-doodle d2" aria-hidden="true">!</div><div className="arena-doodle d3" aria-hidden="true">×</div>
+      </main>
+      <footer className="lobby-footer"><span>01 SOLVE</span><b>→</b><span>02 SCROLL</span><b>→</b><span>03 SCORE</span></footer>
+      <dialog ref={practice} className="practice-dialog"><button className="close" aria-label="Close practice" onClick={() => practice.current?.close()}>×</button><h2>YOU GOT THIS.</h2><p>Find the definite integral:</p><p className="equation">∫₀² x dx = ?</p><form onSubmit={(e) => { e.preventDefault(); const value = Number(answer); setFeedback(answer.trim() && Number.isFinite(value) && Math.abs(value - 2) < 0.01 ? "Nailed it. [x² / 2] from 0 to 2 = 2." : "Try again: the antiderivative of x is x² / 2."); }}><input aria-label="Your answer" inputMode="decimal" value={answer} onChange={(e) => setAnswer(e.target.value)} required placeholder="Your answer" /><button className="play-button" type="submit">CHECK ANSWER ↗</button></form><p role="status">{feedback}</p></dialog>
     </div>
   );
 }
-
 function WaitingPanel({
   room,
   me,
@@ -723,6 +691,8 @@ export default function App() {
       <ResultPanel title="Round locked in" body="Waiting for the other player to finish…" reward={`${me.roundPoints}`} />
     );
   }
+
+  if (!room || !me) return main;
 
   return (
     <div className="app-shell">
