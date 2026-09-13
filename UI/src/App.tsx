@@ -438,16 +438,14 @@ function ProblemPanel({
 }) {
   const [answer, setAnswer] = useState("");
   const [answerBlocked, setAnswerBlocked] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
   const problem = room.problem;
+  const secondsLeft = useCountdown(room.solveDeadlineAt);
+  const expired = room.solveDeadlineAt != null && secondsLeft <= 0;
+  const timedOutRef = useRef(false);
 
   useEffect(() => {
-    setTimeLeft(60);
-    const interval = window.setInterval(() => {
-      setTimeLeft((time) => Math.max(0, time - 1));
-    }, 1000);
-    return () => window.clearInterval(interval);
-  }, [room.round, problem?.latex, problem?.question]);
+    timedOutRef.current = false;
+  }, [room.round, problem?.id]);
 
   useEffect(() => {
     if (!problemError) return;
@@ -456,14 +454,17 @@ function ProblemPanel({
     return () => window.clearTimeout(timeout);
   }, [problemError]);
 
+  useEffect(() => {
+    if (!expired || timedOutRef.current) return;
+    timedOutRef.current = true;
+    onTimeout();
+  }, [expired, onTimeout]);
+
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    if (answerBlocked) return;
+    if (expired || answerBlocked) return;
     onSubmit(answer);
   };
-  useEffect(() => {
-    if (timeLeft === 0) onTimeout();
-  }, [onTimeout, timeLeft]);
 
   return (
     <div className="flex-1 flex flex-col gap-4 px-5 py-4 overflow-y-auto hide-scrollbar">
@@ -504,35 +505,30 @@ function ProblemPanel({
           </div>
         )}
         <form onSubmit={submit} className="flex flex-col gap-2">
-        <div className="answer-row">
-          <input
-            className="answer-input rounded-xl px-4 py-3"
-            style={{ background: "#fff", border: "1.5px solid rgba(0,0,0,0.1)", color: "#111" }}
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            placeholder="Numeric answer"
-            inputMode="decimal"
-            disabled={answerBlocked}
-          />
-          <div className="answer-timer" aria-label={`${timeLeft} seconds left`}>
-            <span className="hourglass" aria-hidden="true">⌛</span>
-            <span>
-              <small>TIME LEFT</small>
-              <strong>{timeLeft}s</strong>
-            </span>
-          </div>
-        </div>
-        <button
-          type="submit"
-          disabled={expired}
-          className="w-full py-4 rounded-2xl font-bold"
-          style={{ background: "#d98878", color: "#000", fontFamily: "'DM Serif Display', serif" }}
-          disabled={answerBlocked}
-        >
-          Submit
-        </button>
+            <input
+              className="w-full rounded-xl px-4 py-3"
+              style={{ background: "#fff", border: "1.5px solid rgba(0,0,0,0.1)", color: "#111" }}
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              placeholder="Numeric answer"
+              inputMode="decimal"
+              disabled={expired || answerBlocked}
+            />
+          <button
+            type="submit"
+            disabled={expired || answerBlocked}
+            className="w-full py-4 rounded-2xl font-bold"
+            style={{
+              background: expired ? "#888" : "#d98878",
+              color: "#000",
+              fontFamily: "'DM Serif Display', serif",
+            }}
+          >
+            Submit
+          </button>
         </form>
       </div>
+      {expired && <p style={{ color: "#CC2200" }}>Time’s up — 0 points this round.</p>}
     </div>
   );
 }

@@ -57,64 +57,6 @@ body {
   position: relative;
 }
 
-.answer-row {
-  display: flex;
-  align-items: stretch;
-  gap: 8px;
-}
-
-.answer-input {
-  min-width: 0;
-  flex: 1;
-}
-
-.answer-timer {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 92px;
-  padding: 6px 9px;
-  border: 2px solid #d98878;
-  border-radius: 12px;
-  background: #f2e8d5;
-  color: #274c43;
-  font-family: 'DM Sans', sans-serif;
-}
-
-.hourglass {
-  display: inline-block;
-  font-size: 1.35rem;
-  line-height: 1;
-  animation: hourglass-flip 2s steps(2, end) infinite;
-}
-
-.answer-timer small,
-.answer-timer strong {
-  display: block;
-  line-height: 1;
-}
-
-.answer-timer small {
-  font-size: .52rem;
-  font-weight: 700;
-  letter-spacing: .08em;
-}
-
-.answer-timer strong {
-  margin-top: 4px;
-  font-size: .95rem;
-}
-
-@keyframes hourglass-flip {
-  0%, 45% { transform: rotate(0deg); }
-  50%, 95% { transform: rotate(180deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hourglass { animation: none; }
-}
-
 .wrong-answer-bubble {
   position: absolute;
   z-index: 2;
@@ -189,6 +131,12 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .time-up-hourglass { animation: none; }
+}
+
+@keyframes hourglass-flip {
+  0%, 45% { transform: rotate(0deg); }
+  50%, 95% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes slide-up   { from { transform:translateY(100%); opacity:0 } to { transform:translateY(0); opacity:1 } }
